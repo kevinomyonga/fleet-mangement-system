@@ -1,0 +1,68 @@
+{% extends "base.html" %}{% load static %}
+{% block title %} Add sms gateway {% endblock %}
+{% block styles %} 
+<link rel="stylesheet" href="{% static "theme/css/form.css" %}">
+{% endblock %}
+
+{% block content %}
+<div>			
+
+	<!-- Row -->
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+            <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                <h2 id="heading">Verify sms settings</h2>
+
+				<form action="{% url 'organization:verify_sms_settings' %}" method="post" id="msform">
+					{% csrf_token %}
+                    <fieldset>
+                        <div class="form-card">
+							<div class="row">
+								<div class="col-xl-12" id="step1-errors">
+								</div>
+							</div>
+
+							<div class="submit-field">
+								<div class="row">
+									<div class="col-xl-12">
+										{{form.verification_code.errors}}
+                                        <label for="{{form.verification_code.id_for_label}}">Verification code</label>
+                                        <div class="submit-field">
+                                            {{form.verification_code}}
+                                        </div>
+									</div>
+								</div>
+							</div>
+
+
+
+                        </div> <input type="submit" id="form-submit" name="next" class="next action-button" value="Submit"/>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- Row / End -->
+
+</div>
+{% endblock content %}
+{% block scripts %}
+
+
+{% endblock scripts %}

@@ -1,0 +1,36 @@
+{% extends "base_iframe.html" %}{% load static %}
+{% block title %} Order {% endblock %}
+
+{% block content %}
+<!--Tabs -->
+<div class="upload-form">
+
+	<ul class="popup-tabs-nav">
+	</ul>
+
+	<div class="popup-tabs-container">
+
+		<!-- Tab -->
+		<div class="popup-tab-content" id="tab2">
+			
+			<!-- Welcome Text -->
+			<div class="welcome-text">
+				<h3>Upload from CSV</h3>
+				<span>Not sure how to get started? <a href="{% static 'download/sample.csv' %}">Download sample</a></span>
+			</div>
+				
+			<form action="" method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="uploadButton margin-top-30">
+					<input class="uploadButton-input" type="file" name="csv_file" accept=".csv" id="upload" multiple/>
+					<label class="uploadButton-button ripple-effect" for="upload">Upload Files</label>
+					<span class="uploadButton-file-name">Upload a CSV</span>
+				</div>
+        		<input type="submit" value="Submit" class="button full-width button-sliding-icon ripple-effect">
+			</form>
+
+		</div>
+
+	</div>
+</div>
+{% endblock content %}

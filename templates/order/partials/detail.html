@@ -1,0 +1,131 @@
+						<li class="do-blink" id="order-{{ object.pk }}">
+							<!-- Job Listing -->
+							<div class="job-listing">
+
+								<!-- Job Listing Details -->
+								<div class="job-listing-details">
+									<!-- Details -->
+									<div class="job-listing-description">
+										<h3 class="job-listing-title">
+											<div class="checkbox checkbox1">
+												<input type="checkbox" id="checkbox-{{ object.pk }}" class="checkbox2" value="{{ object.pk }}">
+												<label for="checkbox-{{ object.pk }}"><span class="checkbox-icon"></span> </label>										
+											</div>
+											<a href="{% url 'order:detail' object.pk %}">{{object.pickup_location_name }} &raquo;&raquo;&raquo; {{object.dropoff_location_name }}</a>
+										</h3>
+										{% if object.state == 7 %}
+											<span class="capitalize dashboard-status-button blue">{{object.get_state_display|lower}}</span>
+										{% elif object.state == 4 or  object.state == 5 %}
+											<a data-href="{% url 'order:state-iframe' object.pk %}" class="do-change-state" href="#"><span class="capitalize dashboard-status-button green">{{object.get_state_display|lower}}&nbsp;<i class="icon-feather-edit"></i></span></a>
+
+										{% elif object.state == 12 or object.state < 3 %}
+											<a data-href="{% url 'order:state-iframe' object.pk %}" class="do-change-state" href="#"><span class="capitalize dashboard-status-button red">{{object.get_state_display|lower}}&nbsp;<i class="icon-feather-edit"></i></span></a>
+										{% elif object.state == 6  %}
+											<span class="capitalize dashboard-status-button red">{{object.get_state_display|lower}}</span>{% if object.failure_reason %}&nbsp;<mark class="color">“{{object.failure_reason}}”</mark>{% endif %}
+										{% else %}
+											<a  data-href="{% url 'order:state-iframe' object.pk %}" class="do-change-state" href="#"><span class="capitalize dashboard-status-button yellow">{{object.get_state_display|lower}}&nbsp;<i class="icon-feather-edit"></i></span></a>
+										{% endif %}
+
+
+										<!-- Job Listing Footer -->
+										<div class="job-listing-footer">
+											<ul>
+												<li><i class="icon-material-outline-business-center"></i> ID: <strong>#{{object.id}}</strong></li>
+												{% if object.ref %}
+												<li><i class="icon-material-outline-business-center"></i> Ref: <strong>{{object.ref}}</strong></li>
+												{% endif %}
+												<li><i class="icon-material-outline-access-time"></i>{{ object.time_ago }}</li>
+											</ul>
+											{% if object.rider %}
+											<ul>
+												<li><i class="icon-line-awesome-motorcycle"></i> <span class="capitalize">{{ object.rider.full_names | lower}}</span></li>
+												<li><i class="icon-feather-phone"></i> <a href="tel:+{{object.rider.phone_number}}">+{{object.rider.phone_number}}</a></li>
+
+											</ul>
+											{% endif %}
+											<ul>
+
+												{% if object.datetime_ordered %}
+													<li><i class="icon-material-outline-date-range"></i> Ordered: {{object.datetime_ordered|date:'d M, Y H:i' }}</li>
+												{% endif %}
+												{% if object.created %}
+													<li><i class="icon-material-outline-date-range"></i> Submited: {{object.created|date:'d M, Y H:i' }}</li>
+												{% endif %}
+
+												{% if object.datetime_assigned %}
+													<li><i class="icon-material-outline-date-range"></i> Driver assigned:  {{object.datetime_assigned|date:'d M, Y H:i' }}</li>
+												{% endif %}
+
+												{% if object.datetime_accepted %}
+													<li><i class="icon-material-outline-date-range"></i> Driver accepted: {{object.datetime_accepted|date:'d M, Y H:i' }}</li>
+												{% endif %}
+												{% if object.datetime_started %}
+													<li><i class="icon-material-outline-date-range"></i> Driver started: {{object.datetime_started|date:'d M, Y H:i' }}</li>
+												{% endif %}
+												{% if object.datetime_arrived %}
+													<li><i class="icon-material-outline-date-range"></i> Driver arrived: {{object.datetime_arrived|date:'d M, Y H:i' }}</li>
+												{% endif %}
+												{% if object.datetime_reviewed %}
+													<li><i class="icon-material-outline-date-range"></i> Customer reviewed: {{object.datetime_reviewed|date:'d M, Y H:i' }}</li>
+												{% endif %}
+
+												{% if object.datetime_failed %}
+													<li><i class="icon-material-outline-date-range"></i> Datetime failed: {{object.datetime_failed|date:'d M, Y H:i' }}</li>
+												{% endif %}
+												{% if object.datetime_completed %}
+													<li><i class="icon-material-outline-date-range"></i> Completed: {{object.datetime_completed|date:'d M, Y H:i' }}</li>
+												{% endif %}
+											</ul>
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+
+
+
+							<!-- Buttons -->
+							<div class="buttons-to-right always-visible">
+								{% if object.state < 7 %}
+									{% if object.rider %}
+									<a href="#" data-href="{% url 'order:assign-iframe' object.pk %}" class="button gray ripple-effect do-assign"><i class="icon-line-awesome-motorcycle"></i> Driver &nbsp;&nbsp;<i class="icon-feather-check-circle"></i></a>
+									{% else %}
+									<a href="#" data-href="{% url 'order:assign-iframe' object.pk %}" class="button dark ripple-effect do-assign"><i class="icon-line-awesome-motorcycle"></i> Driver &nbsp;&nbsp;<i class="icon-feather-minus-circle"></i></a>
+									{% endif %}
+								{% endif %}
+
+								<a href="#" data-href="{% url 'order:pickup-iframe' object.pk %}" class="button gray ripple-effect do-assign"><i class="icon-material-outline-location-on"></i> Pick-up </a>
+
+								<a href="#" data-href="{% url 'order:dropoff-iframe' object.pk %}" class="button gray ripple-effect do-assign"><i class="icon-material-outline-location-on"></i> Drop-off </a>
+
+
+<!--
+								{% if object.state == 7 %}
+								<a href="#" class="button gray ripple-effect ico" data-tippy-placement="top" data-tippy="" data-original-title="Edit"><i class="icon-feather-eye"></i></a>
+								{% else %}
+								<a href="#" class="button gray ripple-effect ico" data-tippy-placement="top" data-tippy="" data-original-title="Edit"><i class="icon-feather-edit"></i></a>
+								{% endif %}
+-->
+							</div>
+
+							{% if object.rating %}
+
+							<div class="boxed-list-item">
+								<!-- Content -->
+								<div class="item-content">
+									<h4>Rating</h4>
+									<div class="item-details margin-top-10">
+										<div class="star-rating" data-rating="{{ object.rating }}"></div>
+										<div class="detail-item"><i class="icon-material-outline-date-range"></i> {{object.datetime_reviewed|date:'d M, Y H:i' }}</div>
+									</div>
+									{% if object.review %}
+									<div class="item-description">
+										<p><i class="icon-material-outline-rate-review"></i>&nbsp; {{ object.review }}</p>
+									</div>
+									{% endif %}
+								</div>
+							</div>
+							{% endif %}
+						</li>

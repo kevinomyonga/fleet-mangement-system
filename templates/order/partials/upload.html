@@ -1,0 +1,31 @@
+<a href="#order-upload-dialog" class="popup-with-zoom-anim button ripple-effect"><i class="icon-feather-upload"></i> Upload orders </a>
+<div id="order-upload-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs small-dialog-2">
+
+	<!--Tabs -->
+	<div class="sign-in-form">
+
+		<ul class="popup-tabs-nav">
+		</ul>
+
+		<div class="popup-tabs-container">
+
+			<!-- Tab -->
+			<div class="popup-tab-content" id="tab2">
+				
+				<!-- Welcome Text -->
+				<div class="welcome-text">
+					<h3>Upload from CSV</h3>
+					<span>Not sure how to get started? <a href="#">Download sample</a></span>
+				</div>
+					
+				<form action="" method="post" enctype="multipart/form-data">
+					{% csrf_token %} {{object_list.upload_from}}
+            		<input type="submit" value="Submit" class="button full-width button-sliding-icon ripple-effect">
+				</form>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+<!-- Leave a Review Popup / End -->

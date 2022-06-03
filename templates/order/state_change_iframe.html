@@ -1,0 +1,41 @@
+{% extends "base_iframe.html" %}{% load static %}
+{% block title %} Order {% endblock %}
+
+{% block content %}
+
+<!--Tabs -->
+<div class="sign-in-form">
+
+	<ul class="popup-tabs-nav">
+	</ul>
+
+	<div class="popup-tabs-container">
+
+		<!-- Tab -->
+		<div class="popup-tab-content" id="tab2">
+			
+			<!-- Welcome Text -->
+			<div class="welcome-text">
+				<h3>Change order state</h3>
+			</div>
+				
+			<form action="" method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="col-xl-12">
+					<div id="div_id_order_state" class="submit-field capitalize">
+						<label for="state" class="">Order status:</label>
+						<select name="state" class="selectpicker capitalize">
+							{% for val, item in object.allowed_states %}
+							  <option class="capitalize" value="{{ val }}" {%if object.state == val %}selected{% endif %}>{{ item }}</option>
+							{% endfor%}
+						</select>
+					</div>
+				</div><br><br>
+        		<input type="submit" value="Submit" class="button full-width button-sliding-icon ripple-effect">
+			</form>
+
+		</div>
+
+	</div>
+</div>
+{% endblock content %}

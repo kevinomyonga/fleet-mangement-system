@@ -1,0 +1,6 @@
+Hello!
+{{appointment.name}} from {{appointment.company}} of mobile number {{appointment.phone_number}} and email {{appointment.email}} has placed an appointment on {{appointment.appointment_date | date:'Y-m-d H:i'}}.
+He/she is interested in {{appointment.interest}}. Their company has {{appointment.number_of_orders}} orders per month.
+Message:
+
+    "{{appointment.message}}"

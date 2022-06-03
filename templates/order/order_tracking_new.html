@@ -1,0 +1,36 @@
+{% load time_to_local %}
+
+<div class="log-screen">
+  <div><h2>Order Status History</h2></div>
+  <li class="log-line">
+    {% time_to_local request object.created as created %}
+    <h5>[{{ created }}] Order was created</h5>
+  </li>
+
+  {% for log in logs %}
+  <li class="log-line">
+    {% time_to_local request log.created_at as date_created %}
+    <h5>[{{ date_created }}] {{ log.action }}</h5>
+  </li>
+  {% endfor %}
+</div>
+
+<style>
+  h2 {
+    font-weight: bold;
+  }
+  .log-screen {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .log-line {
+    display: flex;
+    flex-direction: row;
+    flex: 3;
+    align-items: center;
+    justify-content: left;
+  }
+</style>

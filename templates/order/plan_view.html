@@ -1,0 +1,1399 @@
+{% extends "base_full.html" %}{% load static %}{% load l10n %}
+{% block title %} Route plan {% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{% static "theme/css/jquery.datetimepicker.min.css" %}">
+<link rel="stylesheet" href="{% static "theme/css/form.css" %}">
+<style type="text/css">
+  .compact-list-layout .job-listing:before{
+    opacity: 0 !important;
+  }
+  .full-page-content-inner{
+    padding: 0;
+    min-height: 100vh;
+  }
+  .full-page-sidebar .sidebar-container{
+    padding: 5px;
+  }
+  .full-page-container.with-map .full-page-content-container {
+    flex: 0 0 40vw;
+  }
+  .compact-list-layout {
+	border-radius: 0;
+	box-shadow: 0 0 0 0;
+  }
+  .tabs{
+	border-radius:0;
+	box-shadow: 0 0 0 0;
+  }
+  .tabs-content .tab{
+	padding: 0;
+	margin-bottom: 50px;
+  }
+  .dashboard-box .content.with-padding {
+    padding: 5px 10px 0px 29px;
+  }
+  .dashboard-box .headline {
+    padding: 0px 30px;
+ }
+ .invoice-list-item{
+	position: relative;
+	left: 30px;
+	width: 100%;
+  }
+  .checkbox h3 {
+	margin: -8px 0 0 0;
+    padding-left: 30px;
+  }
+  .checkbox label {
+	padding-left: unset;
+  }
+
+ .invoice-list-item strong {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+  .dashboard-box {
+    box-shadow: 0 0 0 0;
+  }
+  .accordion-header {
+	background: #66676b !important;  
+    padding: 5px 20px;
+    font-size: 13px;
+  }
+  .numbered.color.filled ol > li::before {
+    border: 1px solid #66676b;
+	background: #66676b !important;  
+  }
+  .invoice-list-item strong span {
+    font-weight: 300;
+    font-size: 13px;
+    margin-left: 30px;
+  }
+  .freelancer-name h4{
+    text-transform: capitalize;
+  }
+  #progressbar{
+	margin-bottom:-10px;
+  }
+  #progressbar li{
+	width: 25%;
+  }
+</style>
+{% endblock %}
+{% block content %} 
+<!-- Page Content
+================================================== -->
+<div class="full-page-container with-map">
+
+
+    <!-- Full Page Content -->
+    <div class="full-page-content-container" data-simplebar>
+      <div class="full-page-content-inner">
+
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="text-center p-20 mt-3 mb-2">
+            <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                <h2 id="heading">Plan your orders</h2>
+                <div id="msform" action="">
+                    <!-- progressbar -->
+                    <ul id="progressbar">
+                        <li class="active it" id="select-orders"><strong>Select the orders</strong></li>
+                        <li class="it" id="select-vehicles"><strong>Select the vehicles</strong></li>
+                        <li class="it" id="route-settings"><strong>Settings/Configurations</strong></li>
+                        <li class="it" id="route-results"><strong>Assign to a driver</strong></li>
+                    </ul>
+                    <div class="progress" style="display:none">
+                        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div><br> <!-- fieldsets -->
+                    <fieldset>
+                        <div class="form-card">
+
+
+
+							<div class="submit-field">
+
+				  
+								<div class="dashboard-box margin-top-0">
+
+								  <div class="content with-padding">
+								    <div class="row">
+								      <div class="col-xl-6">
+								        <div id="div_id_created_date_min"  class="submit-field">
+								          <label for="state" class="">Date range:</label>
+								          <div id="reportrange">
+								            <i class="fa fa-calendar"></i>&nbsp;
+								            <span></span> <i class="icon-line-awesome-caret-down"></i>
+								            <input type="hidden" name="page" id="page" value=""/>
+								            <input type="hidden" name="order" id="order" value=""/>
+								            <input type="hidden" name="per_page" id="per_page" value=""/>
+								            <input type="hidden" name="order_by" id="order_by" value=""/>
+								            <input type="hidden" name="end_date" id="end_date" value=""/>
+								            <input type="hidden" name="start_date" id="start_date" value=""/>
+								          </div>
+								        </div>
+								      </div>
+							
+								      <div class="col-xl-6">
+								        <div id="div_id_submit" class="submit-field">
+								          <label for="state" class="">&nbsp;</label>
+								          <div class="searchs-container">
+								            <div class="search-input-container">
+								              <input type="text" name="s" id="s" value="" class="search-input" placeholder="Search by ID, ref, location"/>
+								              <button id="submit-search" class="search-input-button ripple-effect"><i class="icon-material-outline-search"></i></button>
+								            </div>
+								            <div class="keywords-list">
+								              <!-- keywords go here -->
+								            </div>
+								            <div class="clearfix"></div>
+								          </div>
+								        </div>
+								      </div>
+								    </div>
+								  </div>
+					  
+								  <!-- Headline -->
+								  
+								  <div class="content">
+								    <div class="headline orders-available">
+								      <div class="checkbox">
+								        <input type="checkbox" id="checkbox" class="checkbox">
+								        <label for="checkbox"><span class="checkbox-icon"></span></label>
+										<h3 id="order-count"></h3>
+								      </div>
+								    </div>
+								    <div class="row no-orders-available">
+								      <div class="col-xl-12">
+								        <section id="not-found" class="center margin-top-50 margin-bottom-25">
+								          <h2><i class="icon-line-awesome-question-circle"></i></h2>
+								          <p>No orders for date range</p>
+								        </section>
+								      </div>
+								    </div>
+								    <div class="orders-available">
+								      <ul class="dashboard-box-list" id="orders-ajax">
+							
+								      </ul>
+								    </div>
+					  
+								    
+						  
+							
+								  </div>
+								</div>							    
+					  
+						
+							</div>
+
+
+                        </div>
+
+						<div class="row">
+							<div class="col-xl-12" id="step1-errors">
+							</div>
+						</div>
+
+						<input type="button" name="next" class="next action-button orders-available" value="Next" data-step="1"/>
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+
+							<div class="submit-field">
+
+								<div class="dashboard-box margin-top-0">
+								  
+								  <div class="content">
+
+									<div class="dashboard-headline">
+										<div class="buttons-to-right always-visible">
+											<a href="{% url 'vehicle:create-iframe' %}" rel="superbox[iframe]" class="button gray ripple-effect margin-5"><i class="icon-material-outline-add-circle-outline"></i> Add vehicle</a>
+											<a href="#" id="vehicle-refresh" class="button gray ripple-effect margin-5"><i class="icon-line-awesome-refresh"></i></a>
+										</div>
+									</div>
+
+								    <div class="headline vehicles-available">
+								      <div class="checkbox">
+								        <input type="checkbox" id="checkbox2" class="checkbox">
+								        <label for="checkbox2"><span class="checkbox-icon"></span> <h3 id="vehicle-count"></h3></label>
+								      </div>
+								    </div>
+
+								    <div class="row no-vehicles-available">
+								      <div class="col-xl-12">
+								        <section id="not-found" class="center margin-top-50 margin-bottom-25">
+								          <h2><i class="icon-line-awesome-question-circle"></i></h2>
+								          <p>No vehicles available</p>
+								        </section>
+								      </div>
+								    </div>
+
+								    <div class="vehicles-available">
+								      <ul class="dashboard-box-list" id="vehicles-ajax"></ul>
+								    </div>
+			
+								  </div>
+
+								</div>
+
+                        	</div> 
+
+							<div class="row">
+								<div class="col-xl-12" id="step2-errors">
+								</div>
+							</div>
+						</div>
+						<input type="button" name="next" class="next action-button" value="Next"  data-step="2"/> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+
+							<div class="submit-field">
+
+
+								<div class="row">
+									<div class="col-xl-12">
+										<div class="submit-field">
+											<div class="row">
+												<div class="col-xl-4">
+													<div class="submit-field">
+														<h6>Date & time of shipment <span>(optional)</span></i></h6>
+														<div class="input-with-icon">
+															<div id="autocomplete-container">
+																<input placeholder="System default" id="dst" class="with-border datetimepicker" type="text" autocomplete="off" readonly>
+															</div>
+															<i class="icon-material-outline-date-range"></i>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-xl-4">
+													<div class="submit-field">
+														<h6>Start time <span>(overides vehicle operational hours)</span></h6>
+														<div class="btn-group bootstrap-select with-border">
+															<select id="ss_start" class="selectpicker with-border" title="Select" name="ss_start">
+																<option value="-1" >System default</option>
+																<option value="0" >12:00AM</option>
+																<option value="1" >01:00AM</option>
+																<option value="2" >02:00AM</option>
+																<option value="3" >03:00AM</option>
+																<option value="4" >04:00AM</option>
+																<option value="5" >05:00AM</option>
+																<option value="6" >06:00AM</option>
+																<option value="7" >07:00AM</option>
+																<option value="8" >08:00AM</option>
+																<option value="9" >09:00AM</option>
+																<option value="10" >10:00AM</option>
+																<option value="11" >11:00AM</option>
+																<option value="12" >12:00PM</option>
+																<option value="13" >01:00PM</option>
+																<option value="14" >02:00PM</option>
+																<option value="15" >03:00PM</option>
+																<option value="16" >04:00PM</option>
+																<option value="17" >05:00PM</option>
+																<option value="18" >06:00PM</option>
+																<option value="19" >07:00PM</option>
+																<option value="20" >08:00PM</option>
+																<option value="21" >09:00PM</option>
+																<option value="22" >10:00PM</option>
+																<option value="23" >11:00PM</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												<div class="col-xl-4">
+													<div class="submit-field">
+														<h6>End time <span>(overides vehicle operational hours)</span></h6>
+														<div class="btn-group bootstrap-select with-border">
+															<select id="ss_end" class="selectpicker with-border" title="Select" name="ss_end">
+																<option value="-1" >System default</option>
+																<option value="0" >12:00AM</option>
+																<option value="1" >01:00AM</option>
+																<option value="2" >02:00AM</option>
+																<option value="3" >03:00AM</option>
+																<option value="4" >04:00AM</option>
+																<option value="5" >05:00AM</option>
+																<option value="6" >06:00AM</option>
+																<option value="7" >07:00AM</option>
+																<option value="8" >08:00AM</option>
+																<option value="9" >09:00AM</option>
+																<option value="10" >10:00AM</option>
+																<option value="11" >11:00AM</option>
+																<option value="12" >12:00PM</option>
+																<option value="13" >01:00PM</option>
+																<option value="14" >02:00PM</option>
+																<option value="15" >03:00PM</option>
+																<option value="16" >04:00PM</option>
+																<option value="17" >05:00PM</option>
+																<option value="18" >06:00PM</option>
+																<option value="19" >07:00PM</option>
+																<option value="20" >08:00PM</option>
+																<option value="21" >09:00PM</option>
+																<option value="22" >10:00PM</option>
+																<option value="23" >11:00PM</option>
+															</select>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-xl-12">
+										<div class="row">
+
+											<div class="col-xl-4">
+												<div class="submit-field">
+													<h6>Time take to load/unload <span>(optional)</span></h6>
+													<div class="input-with-icon">
+														<input class="with-border" id="lt" type="number" min=0 name="loading time" placeholder="System default">
+														<i class="currency">mins</i>
+													</div>
+												</div>
+											</div>
+											<div class="col-xl-4">
+												<div class="submit-field">
+													<h6>Maximum order per vehicle <span>(overides system default ** 100)</span></h6>
+													<div class="input-with-icon">
+														<input class="with-border" id="mo" type="number" min=0 name="loading time" placeholder="System default">
+														<i class="currency">orders</i>
+													</div>
+												</div>
+											</div>
+											<div class="col-xl-4">
+												<div class="submit-field">
+													<h6>Maximum order value vehicle <span>(overides system default ** 100)</span></h6>
+													<div class="input-with-icon">
+														<input class="with-border" id="mp" type="number" min=0 name="loading time" placeholder="System default">
+														<i class="currency">Ksh</i>
+													</div>
+												</div>
+											</div>
+
+										</div>
+									</div>
+
+									<div class="col-xl-12">
+										<div class="row">
+
+											<div class="col-xl-12">
+												<div class="submit-field">
+
+													<div class="section-headline margin-top-25 margin-bottom-12">
+														<h6>Vehilce routing options</span></h6>
+													</div>
+													<div class="radio">
+														<input id="vr-1" name="vr" type="radio"  value="1">
+														<label for="vr-1"><span class="radio-label"></span> Include only start location in route optimization</label>
+													</div>
+
+													<br>
+
+													<div class="radio">
+														<input id="vr-2" name="vr" type="radio" value="2">
+														<label for="vr-2"><span class="radio-label"></span> Include only end location in route optimization</label>
+													</div>
+													<br>
+
+													<div class="radio">
+														<input id="vr-3" name="vr" type="radio" value="3" checked=checked>
+														<label for="vr-3"><span class="radio-label"></span> Use system default</label>
+													</div>
+
+												</div>
+											</div>
+
+
+										</div>
+									</div>
+
+								</div>
+
+                        	</div> 
+
+							<div class="row">
+								<div class="col-xl-12" id="step3-errors"></div>
+							</div>
+
+						</div>
+						<input type="button" name="next" class="next action-button" value="Next"  data-step="3"/> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+
+							<div class="submit-field">
+
+								<div class="dashboard-box margin-top-0">
+
+
+									  <div class="content">
+										<div class="headline">
+											<h3 id="routes-processing">Processing&hellip;</h3>
+										</div>
+										<div class="clearfix"></div>
+										<div class="accordion js-accordion" id="routes-ajax"></div>
+									  </div>
+								</div>
+
+                        	</div> 
+
+							<div class="row">
+								<div class="col-xl-12" id="step4-errors">
+								</div>
+							</div>
+						</div>
+						<input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    <!-- Full Page Content / End -->
+
+	<a style="display:none" href="{% url 'order:ajax-assign-iframe' %}" class="button gray ripple-effect" rel="superbox[iframe]" id="assign-link"><i class="icon-line-awesome-motorcycle"></i> Driver &nbsp;&nbsp;<i class="icon-feather-check-circle"></i></a>
+
+	<!-- Full Page Map -->
+	<div class="full-page-map-container">
+		<!-- Map -->
+	    <div id="map" data-map-scroll="true"></div>
+	</div>
+	<!-- Full Page Map / End -->
+
+{% endblock %}
+{% block scripts %}
+<script src="{% static "theme/js/jquery.datetimepicker.full.min.js" %}"></script>
+<script
+src="https://maps.googleapis.com/maps/api/js?key={% if map_api %}{{map_api}}{% else %}AIzaSyDrEYEy6nXlouW4TCD_r3sGs44MwHAS3z4{% endif %}&callback=initMap&libraries=geometry&v=weekly"
+async></script>
+<script type="text/javascript">
+let orders = [];
+let markerCluster;
+let urlDrivers = "{% url 'driver:json' %}";
+let driverOrdersURL =  "{% url 'driver:orders' %}";
+let orderMarkerURL = '{% static "theme/images/order-marker.png" %}';
+let driverMarkerURL = '{% static "theme/images/driver-marker.png" %}';
+
+
+
+let map;
+let routes = [];
+let tempMarkers = [];
+let tempMarkerOrders = [];
+let tempMarkerVehicles = [];
+let plannedRoutes = [];
+let geometries = [];
+let polylines = [];
+let markers = [];
+let vehicles = [];
+
+let selectedOrders = [];
+let selectedOrderIDs = [];
+let selectedVehicleIDs = [];
+let colors = ['#3266cc', '#9d4d9a', '#4f971b', '#dc4126', '#dc4126'];
+let infowindow;
+
+function orderHTML(orderObj, title){
+  var ref = '';
+  if(orderObj.ref != undefined){
+    ref = `<li>Ref: <b>${orderObj.ref}</b></li>`;
+  }
+  var date = new Date(Date.parse(orderObj.datetime_ordered));
+  var datetime = `${date.getFullYear()}-${addZero(date.getMonth())}-${addZero(date.getDate())} ${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
+
+  var length = isNaN(parseInt(orderObj.length)) ? 1 : parseInt(orderObj.length);
+  var width = isNaN(parseInt(orderObj.width)) ? 1 : parseInt(orderObj.width);
+  var height = isNaN(parseInt(orderObj.height)) ? 1 : parseInt(orderObj.height);
+  var weight = isNaN(parseInt(orderObj.weight)) ? 1 : parseInt(orderObj.weight); 
+  return `
+<div class="dashboard-box">
+	<div class="headline">
+		<h3><i class="icon-material-outline-assignment"></i> Orders #${orderObj.ID} (${title})</h3>
+	</div>
+	<div class="content">
+		<ul class="dashboard-box-list">
+			<li>
+				<div class="invoice-list-item">
+					<strong>${orderObj.pickup.location.address} »»» ${orderObj.dropoff.location.address}</strong>
+					<ul>
+						<li>Order: <b>#${orderObj.ID}</b></li>
+						${ref}
+						<li>Date: <b>${datetime}</b></li>
+						<li>${parseInt(length)}cms X ${parseInt(width)}cms X ${parseInt(height)}cms (${parseInt(weight)}kgs)</li>
+					</ul>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
+`
+}
+
+function vehicleHTML(vehicleObj){
+  var ref = '';
+
+  return `
+<div class="dashboard-box">
+	<div class="headline">
+		<h3><i class="icon-feather-truck"></i> Vehicle ID:${vehicleObj.ID}</h3>
+	</div>
+	<div class="content">
+		<ul class="dashboard-box-list">
+			<li>
+				<div class="invoice-list-item">
+					<strong>${vehicleObj.name}</strong>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
+`
+}
+function ordersHTML(orderIds, title){
+  var html = `
+<div class="dashboard-box">
+	<div class="headline">
+		<h3><i class="icon-material-outline-assignment"></i> ${title}</h3>
+	</div>
+	<div class="content">
+		<ul class="dashboard-box-list">
+`;
+  console.log(orderIds);
+  orderIds.forEach(function(orderID) {
+	  if (isNaN(orderID)) {
+	html = `${html}
+	<li>
+		<div class="invoice-list-item">
+			<strong>Vehicle</strong>
+		</div>
+	</li>
+`;
+		return
+	  }
+	var orderObj = orders[orderID];
+	var ref = '';
+	if(orderObj.ref != undefined){
+		ref = `<li>Ref: <b>${orderObj.ref}</b></li>`;
+	}
+	var date = new Date(Date.parse(orderObj.datetime_ordered));
+	var datetime = `${date.getFullYear()}-${addZero(date.getMonth())}-${addZero(date.getDate())} ${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
+	html = `${html}
+	<li>
+		<div class="invoice-list-item">
+			<strong>${orderObj.pickup.location.address} »»» ${orderObj.dropoff.location.address}</strong>
+			<ul>
+				<li>Order: <b>#${orderObj.ID}</b></li>
+				${ref}
+				<li>Date: <b>${datetime}</b></li>
+			</ul>
+		</div>
+	</li>
+`;
+  });
+	html = `${html}
+		</ul>
+	</div>
+</div>
+`;
+  return html;
+}
+function openDriverAssignIframe(vehicle_id, route_id){
+	var url = '{% url 'order:ajax-assign-iframe' %}';
+	var url2 = `${url}/${vehicle_id}/${route_id}`;
+	console.log(url2);
+    $('#assign-link').attr('href', url2);
+	$('#assign-link').trigger('click');
+}
+function openDriverAssignIframe2(order_id){
+	var url = '{% url 'order:multi-assign-iframe' %}';
+	var url2 = `${url}?order_id=${order_id}`;
+	console.log(url2);
+    $('#assign-link').attr('href', url2);
+	$('#assign-link').trigger('click');
+}
+function assignRouteToDriver(driver_id, vehicle_id, route_id){
+     console.log(driver_id, route_id);
+
+	var route = JSON.stringify(routes[route_id]);
+    query = {'driver_id' : driver_id, 'vehicle_id' : vehicle_id, 'route' : route};
+	console.log(query);
+    $.post( "{% url 'route:create-json' %}", query, function( data ) {
+		
+		console.log(data);	
+	});
+}
+function initMap() {
+
+  infowindow = new google.maps.InfoWindow();
+  var mapProp = {
+      center: new google.maps.LatLng(-1.254766, 36.797427),
+      zoom: 9,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+
+        // Google Map Style
+        styles: [{"featureType":"poi","elementType":"labels.text.fill","stylers":[{"color":"#747474"},{"lightness":"23"}]},{"featureType":"poi.attraction","elementType":"geometry.fill","stylers":[{"color":"#f38eb0"}]},{"featureType":"poi.government","elementType":"geometry.fill","stylers":[{"color":"#ced7db"}]},{"featureType":"poi.medical","elementType":"geometry.fill","stylers":[{"color":"#ffa5a8"}]},{"featureType":"poi.park","elementType":"geometry.fill","stylers":[{"color":"#c7e5c8"}]},{"featureType":"poi.place_of_worship","elementType":"geometry.fill","stylers":[{"color":"#d6cbc7"}]},{"featureType":"poi.school","elementType":"geometry.fill","stylers":[{"color":"#c4c9e8"}]},{"featureType":"poi.sports_complex","elementType":"geometry.fill","stylers":[{"color":"#b1eaf1"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":"100"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"},{"lightness":"100"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffd4a5"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffe9d2"}]},{"featureType":"road.local","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"weight":"3.00"}]},{"featureType":"road.local","elementType":"geometry.stroke","stylers":[{"weight":"0.30"}]},{"featureType":"road.local","elementType":"labels.text","stylers":[{"visibility":"on"}]},{"featureType":"road.local","elementType":"labels.text.fill","stylers":[{"color":"#747474"},{"lightness":"36"}]},{"featureType":"road.local","elementType":"labels.text.stroke","stylers":[{"color":"#e9e5dc"},{"lightness":"30"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"visibility":"on"},{"lightness":"100"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#d2e7f7"}]}]
+  };
+  map = new google.maps.Map(document.getElementById('map'), mapProp);
+  var mcOptions = {zoomOnClick: false};
+
+  //google.maps.event.addListener(map, 'click', showClickedMarker);
+  markerCluster = new MarkerClusterer(map, null, mcOptions);
+
+  google.maps.event.addListener(markerCluster, 'clusterclick', function(cluster) {
+	var orderIDs = [];
+    cluster.getMarkers().map(cl => orderIDs.push(parseInt(cl.title))  );
+    var info = new google.maps.MVCObject;
+	console.log(cluster.center_);
+    infowindow.set('position', cluster.center_);
+	var count = cluster.getMarkers().length;
+    infowindow.setContent(ordersHTML(orderIDs, `${count} items`));
+    infowindow.open(map, info);
+  });
+  google.maps.event.addListener(map, 'zoom_changed', function() { infowindow.close() });
+
+}
+function showClickedMarker(e) {
+  var lat = e.latLng.lat().toFixed(5);
+  var lng = e.latLng.lng().toFixed(5);
+  var latLng = { lat: parseFloat(lat), lng: parseFloat(lng)};
+  new google.maps.Marker({
+    position: latLng,
+    map
+  });
+}
+$(function(){
+
+  $.get( "{% url 'order:json' %}", getOrders);
+  $.get( "{% url 'vehicle:json' %}", getVehicles);
+
+
+
+  $('#vehicle-refresh').on('click', function() {
+	  $.get( "{% url 'vehicle:json' %}", getVehicles);
+  });
+  $('#live-refresh').on('click', function() {
+  	$.get( "{% url 'route:json' %}", getPlannedRoutes);
+  });
+  $(".datetimepicker").datetimepicker({
+	  timepicker:true,
+	  format:'d.m.Y H:i',
+  });
+
+  $('#submit-search').on('click', function() {
+    var s = $('#s').val();
+    var page = $('#page').val();
+    var per_page = $('#per_page').val();
+    var order = $('#order').val();
+    var order_by = $('#order_by').val();
+    var end_date = $('#end_date').val();
+    var start_date = $('#start_date').val();
+    query = { 
+      's': s, 
+      'page' : page,  
+      'order' : order,
+      'per_page' : per_page, 
+      'order_by' : order_by, 
+      'end_date' : end_date, 
+      'start_date' : start_date 
+    }
+    $.get( "{% url 'order:json' %}", query, getOrders);
+	});
+
+  $("#orders-ajax").delegate(".checkbox2", "click", function(){
+    var id = $(this).data("id");
+    if ($(this).is(":checked")) {
+      console.log("checked");
+      selectedOrderIDs.push(id);
+    } else {
+      console.log("unchecked");
+      selectedOrderIDs = selectedOrderIDs.filter(function(e) { return e !== id })
+    }
+    redrawMarkers();
+  });
+  $("#vehicles-ajax").delegate(".checkbox3", "click", function(){
+    var id = $(this).data("id");
+    if ($(this).is(":checked")) {
+      console.log("checked");
+      selectedVehicleIDs.push(id);
+    } else {
+      console.log("unchecked");
+      selectedVehicleIDs = selectedVehicleIDs.filter(function(e) { return e !== id })
+    }
+  });
+  $('#checkbox').on('click', function() {
+	console.log("here");
+    if ($(this).is(":checked")) {
+      console.log("checked");
+      $('.checkbox2').each(function(i, obj) {
+        var id = $(obj).data("id");
+        console.log(id);
+        selectedOrderIDs = selectedOrderIDs.filter(function(e) { return e !== id });
+        selectedOrderIDs.push(id);
+      });
+      $('.checkbox2').prop('checked', true);
+    } else {
+      console.log("unchecked");
+      $('.checkbox2').each(function(i, obj) {
+        var id = $(obj).data("id");
+        console.log(id);
+        selectedOrderIDs = selectedOrderIDs.filter(function(e) { return e !== id });
+      });
+      $('.checkbox2').prop('checked', false);
+    }
+    redrawMarkers();
+  });
+
+  $('#checkbox2').on('click', function() {
+	console.log("here");
+    if ($(this).is(":checked")) {
+      console.log("checked");
+      $('.checkbox3').each(function(i, obj) {
+        var id = $(obj).data("id");
+        console.log(id);
+        selectedVehicleIDs = selectedVehicleIDs.filter(function(e) { return e !== id });
+        selectedVehicleIDs.push(id);
+      });
+      $('.checkbox3').prop('checked', true);
+    } else {
+      console.log("unchecked");
+      $('.checkbox3').each(function(i, obj) {
+        var id = $(obj).data("id");
+        console.log(id);
+        selectedVehicleIDs = selectedVehicleIDs.filter(function(e) { return e !== id });
+      });
+      $('.checkbox3').prop('checked', false);
+    }
+  });
+
+
+$('#reportrange').daterangepicker({
+    ranges: {
+      'Today': [moment(), moment()],
+      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+      'Last 90 Days': [moment().subtract(90, 'days'), moment()],
+      'Last 6 months': [moment().subtract(180, 'days'), moment()],
+      'Last 12 months': [moment().subtract(365, 'days'), moment()],
+      'This Month': [moment().startOf('month'), moment().endOf('month')],
+      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    }
+  }, cb);
+});
+
+function amplifyPolyline(index){
+	var i = index - 1;
+	var geometry = geometries[i];
+    var polyline = new google.maps.Polyline({
+      path: google.maps.geometry.encoding.decodePath(geometry),
+      strokeColor: colors[i%colors.length],
+      strokeOpacity: 0.5,
+      strokeWeight: 20,
+      map: map,
+    });
+	polylines[i] = polyline;
+}
+function removeAmplifyPolyline(index){
+	var i = index - 1;
+    var polyline = polylines[i];
+	console.log(polyline);
+	polyline.setMap(null);
+}
+function showTempMarkerVehicle(index, title) {
+	var marker = tempMarkers[index];
+	marker.setMap(map);
+	infowindow.setContent(title);
+    infowindow.open({
+      anchor: marker,
+      map,
+      shouldFocus: false,
+    });
+}
+function removeTempMarkerVehicle(index) {
+	var marker = tempMarkers[index];
+	marker.setMap(null);
+}
+
+function showTempMarkerOrderDetails(orderID, title) {
+	var orderObj = orders[orderID];
+	var latLng = { lat: parseFloat(orderObj.dropoff.location.coords.lat), lng: parseFloat(orderObj.dropoff.location.coords.lng)};
+	var marker = new google.maps.Marker({position: latLng});
+	tempMarkerOrders[orderID] = marker;
+	marker.setMap(map);
+	infowindow.setContent(orderHTML(orderObj, title));
+    infowindow.open({anchor: marker,map,shouldFocus: false});
+}
+function removeTempMarkerOrderDetails(orderID) {
+	var marker = tempMarkerOrders[orderID];
+	marker.setMap(null);
+}
+
+function showTempMarkerVehicleDetails(vehicleID) {
+	var vehilceObj = vehicles[vehicleID];
+	var latLng = { lat: parseFloat(vehilceObj.address.lat), lng: parseFloat(vehilceObj.address.lng)};
+	var marker = new google.maps.Marker({position: latLng});
+	tempMarkerVehicles[vehicleID] = marker;
+	marker.setMap(map);
+	infowindow.setContent(vehicleHTML(vehilceObj));
+    infowindow.open({anchor: marker,map,shouldFocus: false});
+}
+function removeTempMarkerVehicleDetails(vehicleID) {
+	var marker = tempMarkerVehicles[vehicleID];
+	marker.setMap(null);
+}
+function showButtonsToRight(e){
+	$(e).find('.buttons-to-right').show();
+}
+function hideButtonsToRight(e){
+	$(e).find('.buttons-to-right').hide();
+}
+
+function convertHMS(value) {
+    const sec = parseInt(value, 10); // convert value to number if it's string
+    let hours   = Math.floor(sec / 3600); // get hours
+    let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
+    let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
+    // add 0 if value < 10; Example: 2 => 02
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    return hours+'hrs '+minutes+' minutes';
+}
+
+
+var showOrderDetails = function(marker, orderID, title) {
+    return function showOrderInfo(e) {
+		var orderObj = orders[orderID];
+    	console.log(orderObj);
+		infowindow.setContent(orderHTML(orderObj, title));
+		infowindow.open({
+		  anchor: marker,
+		  map,
+		  shouldFocus: false,
+		});
+
+    }
+}
+var showVehicleDetails = function(marker, title) {
+    return function showVehicle(e) {
+		infowindow.setContent(title);
+		infowindow.open({
+		  anchor: marker,
+		  map,
+		  shouldFocus: false,
+		});
+
+    }
+}
+function redrawMarkers(){
+  var bounds = new google.maps.LatLngBounds();
+  console.log(selectedOrderIDs);
+  markerCluster.clearMarkers();
+  var markers = []
+
+  for (var i = 0; i < selectedOrderIDs.length; i++) {
+    var id = selectedOrderIDs[i];
+    var selectedOrderID = `#checkbox-${id}`;
+    var pickupLat = $(selectedOrderID).data("pickuplat");
+    var pickupLng = $(selectedOrderID).data("pickuplng");
+    var pickupLatLng = { lat: parseFloat(pickupLat), lng: parseFloat(pickupLng)};
+    var dropoffLat = $(selectedOrderID).data("dropofflat");
+    var dropoffLng = $(selectedOrderID).data("dropofflng");
+    var dropoffLatLng = { lat: parseFloat(dropoffLat), lng: parseFloat(dropoffLng)};
+
+    var markerDropOff = new google.maps.Marker({
+      position: dropoffLatLng,
+      icon: '{% static "theme/images/order-marker.png" %}',
+      map,
+      title: `${id}`
+    });
+    var markerPickUp = new google.maps.Marker({
+      position: pickupLatLng,
+      icon: '{% static "theme/images/order-marker.png" %}',
+      map,
+      title: `${id}`
+    });
+	markers.push(markerDropOff);
+	markers.push(markerPickUp);
+	google.maps.event.addListener(markerDropOff, 'mouseover', showOrderDetails(markerDropOff, id, 'Drop-off location')); 
+	google.maps.event.addListener(markerPickUp, 'mouseover', showOrderDetails(markerPickUp, id, 'Pickup location')); 
+    bounds.extend(dropoffLatLng);
+    bounds.extend(pickupLatLng);
+  }
+  console.log(markers.length);
+  markerCluster.addMarkers(markers);
+  markerCluster.repaint();
+  map.fitBounds(bounds);
+}
+
+function cb(start, end) {
+  $('#reportrange span').html(start.format('MMM DD, YYYY') + ' - ' + end.format('MMM DD, YYYY'));
+  $('#end_date').val(end.format('MMM DD, YYYY'));
+  $('#start_date').val(start.format('MMM DD, YYYY'));
+  var s = $('#s').val();
+  var page = $('#page').val();
+  var per_page = $('#per_page').val();
+  var order = $('#order').val();
+  var order_by = $('#order_by').val();
+  var end_date = $('#end_date').val();
+  var start_date = $('#start_date').val();
+  query = { 
+    's': s, 
+    'page' : page,  
+    'order' : order,
+    'per_page' : per_page, 
+    'order_by' : order_by, 
+    'end_date' : end_date, 
+    'start_date' : start_date 
+  }
+  $.get( "{% url 'order:json' %}", query, getOrders);
+}
+function addZero(val){
+  var newVal = `000${val}`;
+  return newVal.substring(newVal.length-2, newVal.length)
+}
+  function planRoute() {
+	$('#routes-processing').html("Processing&hellip;");
+    $('#routes-ajax').html("");
+	console.log(selectedVehicleIDs);
+	var loadingTime = $('#lt').val();
+	var deliveryStartTime = $('#dst').val();
+	var ssStart = $('#ss_start').val();
+	var ssEnd = $('#ss_end').val();
+	console.log(ssEnd);
+	var mo = $('#mo').val();
+	var vehicle_option = $('input[name=vr]:checked', '#msform').val();
+    query = {
+		'ss_end' : ssEnd,
+		'ss_start' : ssStart,
+		'maximum_orders' : mo,
+		'loading_time' : loadingTime,
+		'orders' : selectedOrderIDs, 
+		'vehicles' : selectedVehicleIDs,
+		'vehicle_option' : vehicle_option,
+		'delivery_start_time' : deliveryStartTime,
+	};
+    $.post( "{% url 'order:route-json' %}", query, function( data ) {
+	  $('#routes-processing').html("Planned route");
+      var html = "";
+      d = jQuery.parseJSON(data);
+      console.log(d);
+      initMap();
+      var i = 0;
+	  var j = 0;
+      var bounds = new google.maps.LatLngBounds();
+      markerCluster.clearMarkers();
+	  markers = [];
+	  geometries = [];
+	  var k = 0;
+	  routes = d.routes;
+      d.routes.forEach(function(element) {
+		geometries.push(element.geometry);
+        new google.maps.Polyline({
+          path: google.maps.geometry.encoding.decodePath(element.geometry),
+          strokeColor: colors[i%colors.length],
+          strokeOpacity: 0.9,
+          strokeWeight: 5,
+          map: map,
+        });
+        i++;
+		var orderCount = element.steps.length/2 - 1;
+		var vehicleObj = vehicles[element.vehicle];
+		var vehicleDesc = vehicleObj.name;
+		var timeTaken = convertHMS(element.service + element.duration);
+		var distance = parseInt(element.distance/1000) + 1;
+
+        html = `
+        <div class="accordion__item js-accordion-item" onmouseover="amplifyPolyline(${i})"  onmouseout="removeAmplifyPolyline(${i})">
+          <div class="accordion-header js-accordion-header">Vehicle: ${vehicleDesc} (${orderCount})</div>
+            <div class="accordion-body js-accordion-body" style="display: none;">
+              <div class="accordion-body__contents">
+				  <div class="clearfix"></div>
+					<a href="#" onclick="openDriverAssignIframe(${element.vehicle}, ${k})" class="button gray ripple-effect margin-5 assign-driver"><i class="icon-line-awesome-motorcycle"></i> Assign a driver</a>
+				  <div class="clearfix"></div>
+                <div class="numbered color filled">
+				  <div>Duration: ${timeTaken}</div> 
+				  <div>Distance: ${distance} kms</div> 
+                  <ol>
+        `;
+		k++;
+        element.steps.forEach(function(step) {
+          var latLng = { lat: step.location[1], lng: step.location[0]};
+		  var marker =   new google.maps.Marker({position: latLng});
+          bounds.extend(latLng);
+          if(step.type == 'job' || step.type == 'pickup' || step.type == 'delivery'){
+            if(step.description != undefined && step.description.length > 0 ){
+
+			  var o = step.description.split(" ");
+			  var title = o[0];
+			  var t = o[1];
+			  marker.setTitle(o[0]);
+			  var orderID = parseInt(title);
+			  var orderObj = orders[orderID];
+			  var locType  = t == 'P' ? 'Pickup location' : 'Drop-off location';
+			  var description = t == 'P' ? `Pickup Order #${orderID} »»» ${orderObj.pickup.location.address}` :
+					 `Drop-off Order #${orderID} »»» ${orderObj.dropoff.location.address}`;
+              html = `${html}<li onmouseover="showTempMarkerOrderDetails(${orderID}, '${locType}')" onmouseout="removeTempMarkerOrderDetails(${orderID})">${description}</li>`;
+            } else {
+              html = `${html}<li onmouseover="showTempMarkerOrderDetails(${orderID}, '${locType}')" onmouseout="removeTempMarkerOrderDetails(${orderID})">${step.type} - ${step.location[1]},${step.location[0]}</li>`;
+            }
+			marker.setIcon('{% static "theme/images/order-marker.png" %}');
+			google.maps.event.addListener(marker, 'mouseover', showOrderDetails(marker, orderID, locType));
+          } else {
+			tempMarkers.push(marker);
+			var index = tempMarkers.length - 1;
+            html = `${html}<li onmouseover="showTempMarkerVehicle(${index}, '${vehicleDesc}')" onmouseout="removeTempMarkerVehicle(${index})">${step.type}</li>`;
+			marker.setIcon('{% static "theme/images/driver-marker.png" %}');
+			google.maps.event.addListener(marker, 'mouseover', showVehicleDetails(marker, vehicleDesc));
+          }
+		  marker.setMap(map); 
+          markers.push(marker);
+        });
+        html = `${html}
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+          `;
+        $('#routes-ajax').append(html);
+      });
+      markerCluster.addMarkers(markers);
+      map.fitBounds(bounds);
+      markerCluster.repaint();
+
+	  console.log(d.unassigned);
+	  if(d.unassigned.length > 0){
+		var unassigned = parseInt(d.unassigned.length/2);
+        var html = `
+        <div class="accordion__item js-accordion-item">
+          <div class="accordion-header js-accordion-header">Unassigned (${unassigned})</div>
+            <div class="accordion-body js-accordion-body" style="display: none;">
+              <div class="accordion-body__contents">
+                 <ul class="dashboard-box-list">
+        `;
+        d.unassigned.forEach(function(item) {
+		  if(item.type != "pickup") return;
+		  element = orders[item.id];
+		  console.log(element);
+		  var ref = '';
+		  if(element.ref != undefined){
+		    ref = `<li>Ref: <b>${element.ref}</b></li>`;
+		  }
+
+		  var length = isNaN(parseInt(element.length)) ? 1 : parseInt(element.length);
+		  var width = isNaN(parseInt(element.width)) ? 1 : parseInt(element.width);
+		  var height = isNaN(parseInt(element.height)) ? 1 : parseInt(element.height);
+		  var weight = isNaN(parseInt(element.weight)) ? 1 : parseInt(element.weight); 
+
+		  var date = new Date(Date.parse(element.datetime_ordered));
+		  var datetime = `${date.getFullYear()}-${addZero(date.getMonth())}-${addZero(date.getDate())} ${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
+          html = `${html}
+				<li onmouseover="showButtonsToRight(this)" onmouseout="hideButtonsToRight(this)">
+					<div class="invoice-list-item">
+						<strong>${element.pickup.location.address} »»» ${element.dropoff.location.address}</strong>
+						<ul>
+							<li>Order: <b>#${element.ID}</b></li>
+							${ref}
+							<li>Date: <b>${datetime}</b></li>
+							<li>${parseInt(length)}cms X ${parseInt(width)}cms X ${parseInt(height)}cms (${parseInt(weight)}kgs)</li>
+						</ul>
+					</div>
+					<div class="buttons-to-right" style="display:none">
+						<button class="button gray" onclick="openDriverAssignIframe2(${element.ID})"><i class="icon-line-awesome-motorcycle"></i></button>
+						<button class="button gray" onmouseover="showTempMarkerOrderDetails(${element.ID}, 'Drop-off location')" onmouseout="removeTempMarkerOrderDetails(${element.ID})"><i class="icon-material-outline-my-location"></i></button>
+					</div>
+				</li>`;
+
+        });
+        html = `${html}
+                </ul>
+            </div>
+          </div>
+        </div>
+          `;
+        $('#routes-ajax').append(html);
+	  }
+
+
+
+
+		var accordion = (function(){
+		  
+		  var $accordion = $('.js-accordion');
+		  var $accordion_header = $accordion.find('.js-accordion-header');
+		 
+		  // default settings 
+		  var settings = {
+			// animation speed
+			speed: 400,
+			
+			// close all other accordion items if true
+			oneOpen: false
+		  };
+			
+		  return {
+			// pass configurable object literal
+			init: function($settings) {
+			  $accordion_header.on('click', function() {
+			    accordion.toggle($(this));
+			  });
+			  
+			  $.extend(settings, $settings); 
+			  
+			  // ensure only one accordion is active if oneOpen is true
+			  if(settings.oneOpen && $('.js-accordion-item.active').length > 1) {
+			    $('.js-accordion-item.active:not(:first)').removeClass('active');
+			  }
+			  
+			  // reveal the active accordion bodies
+			  $('.js-accordion-item.active').find('> .js-accordion-body').show();
+			},
+			toggle: function($this) {
+			        
+			  if(settings.oneOpen && $this[0] != $this.closest('.js-accordion').find('> .js-accordion-item.active > .js-accordion-header')[0]) {
+			    $this.closest('.js-accordion')
+			           .find('> .js-accordion-item') 
+			           .removeClass('active')
+			           .find('.js-accordion-body')
+			           .slideUp();
+			  }
+			  
+			  // show/hide the clicked accordion item
+			  $this.closest('.js-accordion-item').toggleClass('active');
+			  $this.next().stop().slideToggle(settings.speed);
+			}
+		  };
+		})();
+	  accordion.init({ speed: 300, oneOpen: true });
+    });
+  }
+function getOrders( data ) {
+  d = jQuery.parseJSON(data);
+  items = d.items;
+  $('#orders-ajax').html("");
+  if(items.length > 0){
+    items.forEach(function(element) {
+	  orders[element.ID] = element;
+      console.log(element);
+      var ref = '';
+      if(element.ref != undefined){
+        ref = `<li>Ref: <b>${element.ref}</b></li>`;
+      }
+	  var length = isNaN(parseInt(element.length)) ? 1 : parseInt(element.length);
+	  var width = isNaN(parseInt(element.width)) ? 1 : parseInt(element.width);
+	  var height = isNaN(parseInt(element.height)) ? 1 : parseInt(element.height);
+	  var weight = isNaN(parseInt(element.weight)) ? 1 : parseInt(element.weight); 
+
+	  var date = new Date(Date.parse(element.datetime_ordered));
+	  var datetime = `${date.getFullYear()}-${addZero(date.getMonth())}-${addZero(date.getDate())} ${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
+      var html = `
+			<li onmouseover="showButtonsToRight(this)" onmouseout="hideButtonsToRight(this)">
+				<div class="checkbox checkbox1">
+                    <input 
+		                type="checkbox" 
+		                id="checkbox-${element.ID}" 
+		                class="checkbox2" 
+		                value="${element.ID}"
+		                data-dropofflat="${element.dropoff.location.coords.lat}" 
+		                data-dropofflng="${element.dropoff.location.coords.lng}" 
+		                data-pickuplat="${element.pickup.location.coords.lat}" 
+		                data-pickuplng="${element.pickup.location.coords.lng}" 
+		                data-id="${element.ID}"/>
+                    <label for="checkbox-${element.ID}"><span class="checkbox-icon"></span> </label>										
+                </div>
+				<div class="invoice-list-item">
+					<strong>${element.pickup.location.address} »»» ${element.dropoff.location.address}</strong>
+					<ul>
+						<li>Order: <b>#${element.ID}</b></li>
+						${ref}
+						<li>Date: <b>${datetime}</b></li>
+						<li>${parseInt(length)}cms X ${parseInt(width)}cms X ${parseInt(height)}cms (${parseInt(weight)}kgs)</li>
+					</ul>
+				</div>
+				<div class="buttons-to-right" style="display:none">
+					<button class="button gray" onmouseover="showTempMarkerOrderDetails(${element.ID}, 'Drop-off location')" onmouseout="removeTempMarkerOrderDetails(${element.ID})"><i class="icon-material-outline-my-location"></i></button>
+				</div>
+			</li>`;
+        $('#orders-ajax').append(html);
+        $('.orders-available').show();
+        $('.no-orders-available').hide();
+    });
+  } else {
+    $('.no-orders-available').show();
+    $('.orders-available').hide();
+  }
+  $('#s').val(d.s);
+  $('#page').val(d.page);
+  $('#per_page').val(d.per_page);
+  $('#order').val(d.order);
+  $('#order_by').val(d.order_by);
+  $('#end_date').val(d.end_date);
+  $('#start_date').val(d.start_date);
+  $('#reportrange span').html(`${d.start_date} - ${d.end_date}`);
+  $('#order-count').html(`<i class="icon-material-outline-assignment"></i> ${items.length} orders`);
+};
+
+function getVehicles( data ) {
+  d = jQuery.parseJSON(data);
+  items = d.items;
+  $('#vehicles-ajax').html("");
+  if(items.length > 0){
+    items.forEach(function(element) {
+	  vehicles[element.ID] = element;
+      console.log(element);
+      var html = `
+			<li onmouseover="showButtonsToRight(this)" onmouseout="hideButtonsToRight(this)">
+				<div class="checkbox checkbox1">
+                    <input 
+		                type="checkbox" 
+		                id="checkbox3-${element.ID}" 
+		                class="checkbox3" 
+		                value="${element.ID}"
+		                data-id="${element.ID}"/>
+                    <label for="checkbox3-${element.ID}"><span class="checkbox-icon"></span> </label>										
+                </div>
+				<div class="invoice-list-item">
+					<strong>${element.name}</strong>
+					<ul>
+						<li>${element.service.start_display} - ${element.service.end_display}</li>
+						<li>${parseInt(element.length)}cms X ${parseInt(element.width)}cms X ${parseInt(element.height)}cms (${parseInt(element.weight)}kgs)</li>
+					</ul>
+				</div>
+				<div class="buttons-to-right" style="display:none">
+					<button class="button gray" onmouseover="showTempMarkerVehicleDetails(${element.ID})" onmouseout="removeTempMarkerVehicleDetails(${element.ID})"><i class="icon-material-outline-my-location"></i></button>
+				</div>
+			</li>`;
+        $('#vehicles-ajax').append(html);
+        $('.vehicles-available').show();
+        $('.no-vehicles-available').hide();
+    });
+  } else {
+    $('.no-vehicles-available').show();
+    $('.vehicles-available').hide();
+  }
+  $('#vehicle-count').html(`<i class="icon-feather-truck"></i> ${d.count} vehicles`);
+};
+
+$(document).ready(function(){
+
+var current_fs, next_fs, previous_fs; //fieldsets
+var opacity;
+var current = 1;
+var steps = $("fieldset").length;
+
+setProgressBar(current);
+
+$(".next").click(function(event){
+var step = $(this).data('step');
+console.log(step);
+if(parseInt(step) == 1){
+	if(selectedOrderIDs.length < 1){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Select at least one order to continue
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step1-errors').html(error);
+		return;
+	}
+}
+
+if(parseInt(step) == 2){
+
+	if(selectedVehicleIDs.length < 1){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Select at least one vehicle to continue
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step2-errors').html(error);
+		return;
+	}
+}
+
+if(parseInt(step) == 3){
+	planRoute();
+}
+
+if(parseInt(step) == 4){
+}
+current_fs = $(this).parent();
+next_fs = $(this).parent().next();
+
+//Add Class Active
+$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+//show the next fieldset
+next_fs.show();
+//hide the current fieldset with style
+current_fs.animate({opacity: 0}, {
+step: function(now) {
+// for making fielset appear animation
+opacity = 1 - now;
+
+current_fs.css({
+'display': 'none',
+'position': 'relative'
+});
+next_fs.css({'opacity': opacity});
+},
+duration: 500
+});
+setProgressBar(++current);
+});
+
+$(".previous").click(function(){
+
+current_fs = $(this).parent();
+previous_fs = $(this).parent().prev();
+
+//Remove class active
+$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+//show the previous fieldset
+previous_fs.show();
+
+//hide the current fieldset with style
+current_fs.animate({opacity: 0}, {
+step: function(now) {
+// for making fielset appear animation
+opacity = 1 - now;
+
+current_fs.css({
+'display': 'none',
+'position': 'relative'
+});
+previous_fs.css({'opacity': opacity});
+},
+duration: 500
+});
+setProgressBar(--current);
+});
+
+function setProgressBar(curStep){
+	var percent = parseFloat(100 / steps) * curStep;
+	percent = percent.toFixed();
+	$(".progress-bar")
+	.css("width",percent+"%")
+}
+
+$(".submit").click(function(){
+	return false;
+})
+
+});
+</script>
+{% endblock scripts %}

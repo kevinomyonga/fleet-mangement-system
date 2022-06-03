@@ -1,0 +1,33 @@
+.grey{
+	color:grey;
+}
+.holder{
+	min-height: calc(100vh - 380px);
+}
+.capitalize{
+	text-transform:capitalize;
+}
+input[type="file"]{
+	box-shadow:none;
+}
+.crimson{
+	background:#E91E63;
+}
+.no-margin{
+	margin:0;
+}
+.padding-reset{
+	padding:3px 22px!important;
+}
+.page-item{
+	margin-right:-5px!important;
+	margin-left:-5px!important;
+}
+
+.page-item2{
+	margin-right:10px!important;
+	margin-left:10px!important;
+}
+.min-height{
+	min-height:calc(100vh - 246px);
+}

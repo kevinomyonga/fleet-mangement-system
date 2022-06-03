@@ -1,0 +1,108 @@
+ {% load time_to_local %}
+  <div class="log-screen">
+
+  {% if object.datetime_ordered %}
+    <li class="log-line">
+      {% time_to_local request object.datetime_ordered as datetime_ordered %}
+      <h5>[{{ datetime_ordered }}] Ordered</h5>
+    </li>
+  {%  endif %}
+
+  <li class="log-line">
+    {% time_to_local request object.created as created %}
+    <h5>[{{ created }}]  Order was created</h5>
+  </li>
+
+    {% if object.datetime_assigned %}
+    {% time_to_local request object.datetime_assigned as datetime_assigned %}
+    <li class="log-line">
+      <h5>[{{ datetime_assigned }}] Checking for available drivers {{ object.get_state_display }} </h5>
+    </li>
+
+    <li class="log-line">
+      <h5>[{{ datetime_assigned }}] Driver found - {{ object.rider.first_name }}</h5>
+    </li>
+
+    <li class="log-line">
+      {% time_to_local request object.datetime_assigned as datetime_assigned %}
+      <h5>{{ datetime_assigned }} assigned to {{ object.rider.first_name }} {{ object.rider.last_name }}</h5>
+      </li>
+    {% endif %}
+
+
+    {% if object.datetime_started %}
+    <li class="log-line">
+      {% time_to_local request object.datetime_started as datetime_started %}
+      <h5>{{ datetime_started }} {{ object.rider.first_name }} {{ object.rider.last_name }} started the order </h5>
+    </li>
+    {% endif %}
+
+
+    {% if object.datetime_accepted %}
+    <li class="log-line">
+      {% time_to_local request object.datetime_accepted as datetime_accepted %}
+      <h5>{{ datetime_accepted }} Driver accepted the order </h5>
+    </li>
+    {% endif %}
+
+    {% if object.datetime_arrived %}
+    <li class="log-line">
+      {% time_to_local request object.datetime_arrived as datetime_arrived %}
+      <h5>{{ datetime_arrived }} Order Arrived </h5>
+    </li>
+    {% endif %}
+
+    {% if object.datetime_started %}
+      <li class="log-line">
+        {% time_to_local request object.datetime_started as datetime_started %}
+        <h5> {{ datetime_started }} Driver started the order </h5>
+      </li>
+    {% endif %}
+
+    {% if object.datetime_arrived %}
+      <li class="log-line">
+        {% time_to_local request object.datetime_arrived as datetime_arrived %}
+        <h5> {{ datetime_arrived }} Driver arrived at pickup station. </h5>
+      </li>
+    {% endif %}
+
+    {% if object.datetime_completed %}
+      <li class="log-line">
+        {% time_to_local request object.datetime_completed as datetime_completed %}
+        <h5> {{ datetime_completed }} Order was Completed</h5>
+      </li>
+    {% endif %}
+
+    {% if object.datetime_reviewed %}
+      <li class="log-line">
+        {% time_to_local request object.datetime_reviewed as datetime_reviewed %}
+        <h5> {{ datetime_reviewed }} A reviewed was made for the order. </h5>
+      </li>
+    {% endif %}
+
+    {% if object.datetime_failed %}
+      <li class="log-line">
+        {% time_to_local request object.datetime_failed as datetime_failed %}
+        <h5>{{ datetime_failed }} The order was failed</h5>
+      </li>
+    {% endif %}
+
+</div>
+
+<style media="screen">
+  .log-screen {
+    overflow:scroll;
+    height: 700px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .log-line {
+    display: flex;
+    flex-direction: row;
+    flex: 3;
+    align-items: center;
+    justify-content: left;
+  }
+</style>

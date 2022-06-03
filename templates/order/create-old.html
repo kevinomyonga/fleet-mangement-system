@@ -1,0 +1,370 @@
+{% extends "base.html" %}{% load static %}
+{% block title %} Drivers {% endblock %}
+{% block styles %} 
+
+	<link rel="stylesheet" href="{% static "theme/css/jquery.datetimepicker.min.css" %}">
+{% endblock %}
+
+{% block content %}
+<div>			
+	<!-- Dashboard Headline -->
+	<div class="dashboard-headline">
+		<h3>Create a new order</h3>
+	</div>
+
+	<!-- Row -->
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+
+				<!-- Headline -->
+				<div class="headline">
+					<h3><i class="icon-feather-folder-plus"></i> Order creation form</h3>
+				</div>
+
+				<div class="content with-padding padding-bottom-10">
+
+					<div class="row">
+						<div class="col-xl-12">
+						{% for field in form %}
+						  {% if field.errors %}
+							{% for error in field.errors %}
+							<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							  {{ error }}
+							  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+							{% endfor %}
+						  {% endif %}
+						{% endfor %}	
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xl-12">
+							<div class="submit-field">
+								<h5>Customer details</h5>
+								<div class="row">
+									<div class="col-xl-3">
+										<div class="submit-field">
+											<h6>Name <span>(optional)</span></h6>
+											<input type="text" id="customer_name" class="with-border">
+										</div>
+									</div>
+									<div class="col-xl-3">
+										<div class="submit-field">
+											<h6>Phone number <span>(optional)</span></h6>
+											<input type="number" id="customer_phone_number" class="with-border">
+										</div>
+									</div>
+									<div class="col-xl-3">
+										<div class="submit-field">
+											<h6>Email <span>(optional)</span></h6>
+											<input type="email"  id="customer_email"  class="with-border">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="col-xl-12">
+							<div class="submit-field">
+								<h5>Order details</h5>
+								<div class="row">
+									<div class="col-xl-3">
+										<div class="submit-field">
+											<h6>Ref: <span>(optional)</span></h6>
+											<input type="text"  id="order_ref" class="with-border">
+										</div>
+									</div>
+
+									<div class="col-xl-3">
+										<div class="submit-field">
+											<h6>Delivery date & time  <span>(optional)</span></i></h6>
+											<div class="input-with-icon">
+												<div id="autocomplete-container">
+													<input class="with-border" type="text" autocomplete="off" readonly id="delivery_date">
+												</div>
+												<i class="icon-material-outline-date-range"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xl-12">
+							<div class="row">
+
+								<div class="col-xl-2">
+									<div class="submit-field">
+										<h6>Length <span>(optional)</span></h6>
+										<div class="input-with-icon">
+											<input class="with-border" id="length" type="number" min=1>
+											<i class="currency">cms</i>
+										</div>
+									</div>
+								</div>
+								<div class="col-xl-2">
+									<div class="submit-field">
+										<h6>Width <span>(optional)</span></h6>
+										<div class="input-with-icon">
+											<input class="with-border" id="width" type="number" min=1>
+											<i class="currency">cms</i>
+										</div>
+									</div>
+								</div>
+								<div class="col-xl-2">
+									<div class="submit-field">
+										<h6>Height <span>(optional)</span></h6>
+										<div class="input-with-icon">
+											<input class="with-border" id="height" type="number" min=1>
+											<i class="currency">cms</i>
+										</div>
+									</div>
+								</div>
+								<div class="col-xl-2">
+									<div class="submit-field">
+										<h6>Weight <span>(optional)</span></h6>
+										<div class="input-with-icon">
+											<input class="with-border" id="weight" type="number" min=1>
+											<i class="currency">kgs</i>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="col-xl-2">
+									<div class="submit-field">
+										<h6>Price <span>(optional)</span></h6>
+										<div class="input-with-icon">
+											<input class="with-border" id="price" type="number" min=1>
+											<i class="currency">ksh</i>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-xl-2">
+									<div class="submit-field">
+										<h6>Payment method</h6>
+										<div class="btn-group bootstrap-select with-border">
+											<select class="selectpicker with-border" data-size="7" title="Delivery period" tabindex="-98"><option class="bs-title-option" value="">Select a payment method</option>
+												<option selected>Prepaid</option>
+												<option>Postpaid</option>
+												<option>Credit</option>
+											</select>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+
+
+					<div class="row">
+
+							<div class="col-xl-6">
+								<div class="row">
+									<div class="col-xl-12">
+
+										<div class="submit-field">
+											<h5>Pickup contact details</h5>
+											<div class="row">
+												<div class="col-xl-7">
+													<h6>Address</h6>
+													<div class="input-with-icon">
+														<div id="autocomplete-container">
+															<input id="pickup-location" class="with-border" id="pickup_address" type="text" autocompete="off">
+														</div>
+														<i class="icon-material-outline-location-on"></i>
+													</div>
+												</div>
+												<div class="col-xl-5">
+													<h6>Road/Apartment/Hse. No</h6>
+													<div class="submit-field">
+														<input type="text" class="with-border" id="pickup_more">
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-xl-4">
+													<h6>Name</h6>
+													<div class="submit-field">
+														<input type="text" class="with-border" id="pickup_name">
+													</div>
+												</div>
+												<div class="col-xl-4">
+													<h6>Phone number</h6>
+													<div class="submit-field">
+														<input type="number" class="with-border" id="pickup_phone_number">
+													</div>
+												</div>
+												<div class="col-xl-4">
+													<h6>Email</h6>
+													<div class="submit-field">
+														<input type="email" class="with-border" id="pickup_email">
+													</div>
+												</div>
+											</div>
+										</div>
+									
+
+									</div>
+								</div>
+							</div>
+
+							<div class="col-xl-6">
+								<div class="row">
+									<div class="col-xl-12">
+									
+										<div class="submit-field">
+											<h5>Drop-off contact details</h5>
+											<div class="row">
+												<div class="col-xl-7">
+													<h6>Address</h6>
+													<div class="input-with-icon">
+														<div id="autocomplete-container">
+															<input id="pickup-location" class="with-border" type="text" id="dropoff_address" autocompete="off">
+														</div>
+														<i class="icon-material-outline-location-on"></i>
+													</div>
+												</div>
+												<div class="col-xl-5">
+													<h6>Road/Apartment/Hse. No</h6>
+													<div class="submit-field">
+														<input type="text" class="with-border" id="dropoff_more">
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-xl-4">
+													<h6>Name</h6>
+													<div class="submit-field">
+														<input type="text" class="with-border" id="dropoff_name" >
+													</div>
+												</div>
+												<div class="col-xl-4">
+													<h6>Phone number</h6>
+													<div class="submit-field">
+														<input type="number" class="with-border" id="dropoff_phone_number" >
+													</div>
+												</div>
+												<div class="col-xl-4">
+													<h6>Email</h6>
+													<div class="submit-field">
+														<input type="email" class="with-border" id="dropoff_email">
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+
+					</div>
+
+
+
+
+					<div class="row">
+						<div class="col-xl-12">
+							<div class="submit-field">
+								<h5>Notes <span>(optional)</span></h5>
+								<textarea cols="30" rows="5" class="with-border"></textarea>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+
+		<div class="col-xl-12">
+			<button class="button ripple-effect big margin-top-30" form="submit-form" id="submit-form"><i class="icon-feather-plus"></i> Create order</button>
+		</div>
+	</div>
+	<!-- Row / End -->
+
+</div>
+<form action="" method="post" style="display:none" id="form-hidden">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+{% endblock content %}
+{% block scripts %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={% if map_api %}{{map_api}}{% else %}AIzaSyDrEYEy6nXlouW4TCD_r3sGs44MwHAS3z4{% endif %}&callback=initMap&libraries=places&v=weekly" defer></script>
+<script src="{% static "theme/js/jquery.datetimepicker.full.min.js" %}"></script>
+
+<script>
+  $(document).ready(function() {
+	$('#customer_name').val($("#id_customer_name").val());
+	$('#customer_email').val($("#id_customer_email").val());
+	$('#customer_phone_number').val($("#id_customer_phone_number").val());
+
+	$('#order_ref').val($("#id_ref").val());
+
+	$('#length').val($("#id_length").val());
+	$('#width').val($("#id_width").val());
+	$('#height').val($("#id_height").val());
+	$('#weight').val($("#id_weight").val());
+	$('#price').val($("#id_price").val());
+
+
+	
+     $("#submit-form").click(function(event) {
+        event.preventDefault();
+		$('#id_customer_name').val($("#customer_name").val());
+		$('#id_customer_email').val($("#customer_email").val());
+		$('#id_customer_phone_number').val($("#customer_phone_number").val());
+
+		$('#id_ref').val($("#order_ref").val());
+
+		$('#id_length').val($("#length").val());
+		$('#id_width').val($("#width").val());
+		$('#id_height').val($("#height").val());
+		$('#id_weight').val($("#weight").val());
+		$('#id_price').val($("#price").val());
+
+		$('#form-hidden').submit();
+     });
+  });
+
+  // This example requires the Places library. Include the libraries=places
+  // parameter when you first load the API. For example:
+  // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+  function initMap() {
+    const input_pickup = document.getElementById("pickup-location");
+    const input_dropoff = document.getElementById("dropoff-location");
+    const autocomplete_pickup = new google.maps.places.Autocomplete(input_pickup);
+    const autocomplete_dropoff = new google.maps.places.Autocomplete(input_dropoff);
+    // Set the data fields to return when the user selects a place.
+    autocomplete_pickup.setFields([
+      "address_components",
+      "geometry",
+      "icon",
+      "name",
+    ]);
+    autocomplete_dropoff.setFields([
+      "address_components",
+      "geometry",
+      "icon",
+      "name",
+    ]);
+  }
+  $(function () {
+	$("#delivery_date").datetimepicker({
+	  minDate:0,
+	  minTime:new Date(),
+	  format: 'm/d/Y h:m',
+	});
+  });
+</script>
+{% endblock scripts %}

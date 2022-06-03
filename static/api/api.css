@@ -1,0 +1,22 @@
+.item{
+	margin-top:40px;
+	overflow:hidden;
+}
+.border-bottom{
+	border-bottom:1px solid;
+}
+.container{
+	width:640px;
+}
+pre{
+	background: black;
+    color: wheat;
+	padding:0.5em;
+	font-family:'Source Code Pro';
+}
+code{
+	font-family:'Source Code Pro';
+}
+.blue{
+	color:blue;
+}

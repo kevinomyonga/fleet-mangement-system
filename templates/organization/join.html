@@ -1,0 +1,102 @@
+{% extends "base0.html" %}{% load static %}
+{%block title %} Login {% endblock %}
+{% block content %}
+		<div class="col-xl-5 offset-xl-3">
+
+			<div class="login-register-page">
+				<div class="welcome-text">
+					<h3 style="font-size: 26px;">Join {{ object.organization.name }}</h3>
+				</div>
+				{% for field in form %}
+				  {% if field.errors %}
+					{% for error in field.errors %}
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					  {{ error }}
+					  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+					{% endfor %}
+				  {% endif %}
+				{% endfor %}				
+				<!-- Form -->
+				{% if user %}
+				<form method="post">
+					{% csrf_token %}
+					<input type="hidden" class="input-text with-border" name="no_do_password" value="1"/>
+					<button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit" name="accept_join" >Accept & Join <i class="icon-material-outline-arrow-right-alt"></i></button>
+				</form>
+
+				{% else %}
+				<div class="row">
+					<div class="col-xl-12" id="step-errors"></div>
+				</div>
+				<form method="post" id="submit_join-form">
+					{% csrf_token %}
+					<div class="input-with-icon-left">
+						<i class="icon-material-outline-lock"></i>
+						<input type="password" class="input-text with-border" name="password" id="password" placeholder="Password" required/>
+					</div>
+
+					<div class="input-with-icon-left">
+						<i class="icon-material-outline-lock"></i>
+						<input type="password" class="input-text with-border" name="confirm_password" id="confirm_password" placeholder="Confirm password" required/>
+					</div>
+
+					<input type="hidden" class="input-text with-border" name="do_password" value="1"/>
+					<!-- Button -->
+					<button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit" name="submit_join" id="submit_join">Submit & Join <i class="icon-material-outline-arrow-right-alt"></i></button>
+
+				</form>
+				{% endif %}
+				
+
+			</div>
+
+		</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+  $(document).ready(function() {
+     $("#submit_join").click(function(event) {
+		console.log("Here");
+        event.preventDefault();
+		var password = $('#password').val().trim();
+		var confirm_password = $('#confirm_password').val().trim();
+		if(password.length < 6){
+		console.log("Here");
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Password must be greater that 6 chars
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step-errors').html(error);
+			return;
+		}
+		if(confirm_password.length < 6){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Confirm password must be greater that 6 chars
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step-errors').html(error);
+			return;
+		}
+
+		if(password != confirm_password){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Passwords do not match
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step-errors').html(error);
+			return;
+		}
+		
+		$('#submit_join-form').submit();
+     });
+  });
+</script>
+{% endblock %}

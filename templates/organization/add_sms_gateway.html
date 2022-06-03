@@ -1,0 +1,226 @@
+{% extends "base.html" %}{% load static %}
+{% block title %} Add sms gateway {% endblock %}
+{% block styles %} 
+<link rel="stylesheet" href="{% static "theme/css/form.css" %}">
+{% endblock %}
+
+{% block content %}
+<div>			
+
+	<!-- Row -->
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+					<div class="container-fluid">
+						<div class="row">
+									<div class="text-center p-0 mt-3 mb-2">
+										<h2 id="heading">Add sms gateway</h2>
+										<p>Fill out this form to add your custom sms gateway</p>
+									</div>
+
+									<form action="{% url 'organization:add_sms_gateway' %}" method="post">
+										{% csrf_token %}
+										{{ form.non_field_errors }}
+										{{ form.organization.errors }}
+										{{form.organization}}
+										{{form.verification_code}}
+
+										<div class="row">
+											<div class="col-md-4" id="inputProvider">
+												{{form.provider.errors}}
+												<label for="{{form.provider.id_for_label}}">Provider</label>
+												{{form.provider}}
+											</div>
+											<div class="col-md-4" id="inputSenderId">
+												{{form.sender_id.errors}}
+												<label for="{{form.sender_id.id_for_label}}">Sender ID</label>
+												{{form.sender_id}}
+											</div>
+											<div class="col-md-4" id="inputphoneNo">
+												{{form.phone_number.errors}}
+												<label for="{{form.phone_number.id_for_label}}">Phone number</label>
+												{{form.phone_number}}
+											</div>
+										</div>
+										<div class="row">
+											<div id="inputAPIKeyDiv" class="col-md-6">
+												{{form.api_key.errors}}
+												<label for="{{form.api_key.id_for_label}}">API Key</label>
+												{{form.api_key}}
+											</div>
+											<div id="inputAPISecretDiv" class="col-md-6" >
+												{{form.api_secret.errors}}
+												<label for="{{form.api_secret.id_for_label}}">API Secret</label>
+												{{form.api_secret}}
+											</div>
+
+											<div id="inputUserNameDiv" class="col-md-6">
+												{{form.username.errors}}
+												<label for="{{form.username.id_for_label}}">Username</label>
+												{{form.username}}
+											</div>
+											<div id="inputBaseUrlDiv" class="col-md-6">
+												{{form.base_url.errors}}
+												<label for="{{form.base_url.id_for_label}}">Base Url</label>
+												{{form.base_url}}
+											</div>
+										</div>
+
+										<div class="row">
+											<div id="inputAccountSIDDiv" class="col-md-6">
+												{{form.account_sid.errors}}
+												<label for="{{form.account_sid.id_for_label}}">Account SID</label>
+												{{form.account_sid}}
+											</div>
+											<div id="inputAthTokenDiv" class="col-md-6">
+												{{form.auth_token.errors}}
+												<label for="{{form.auth_token.id_for_label}}" >Auth Token</label>
+												{{form.auth_token}}
+											</div>
+										</div>
+										<!-- Button -->
+										<div class="col-xl-12">
+											<button type="submit" class="button ripple-effect big margin-top-30">Save</button>
+										</div>
+									</form>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- Row / End -->
+
+</div>
+{% endblock content %}
+{% block scripts %}
+<script>
+  $(document).ready(function() {
+	let provider = document.getElementById('inputProvider')
+	let senderId = document.getElementById('inputSenderId')
+	let apiKeyDiv = document.getElementById('inputAPIKeyDiv')
+	let usernameDiv = document.getElementById('inputUserNameDiv')
+	let baseUrlDiv = document.getElementById('inputBaseUrlDiv')
+	let accountSIDDiv = document.getElementById('inputAccountSIDDiv')
+	let authTokenDiv = document.getElementById('inputAthTokenDiv')
+	let apiSecretDiv = document.getElementById('inputAPISecretDiv')
+
+	apiKeyDiv.style.display = "block"
+	usernameDiv.style.display = "block"
+	baseUrlDiv.style.display = "none"
+	accountSIDDiv.style.display = "none"
+	authTokenDiv.style.display = "none"
+	apiSecretDiv.style.display = "none"
+	$("#id_provider").val("1").change();
+
+    document.getElementById('id_provider').onchange = function() {
+		switch(this.value){
+			case '1':
+				{% comment %} Africastalking {% endcomment %}
+				
+				apiKeyDiv.style.display = "block"
+				usernameDiv.style.display = "block"
+				baseUrlDiv.style.display = "none"
+				accountSIDDiv.style.display = "none"
+				authTokenDiv.style.display = "none"
+				apiSecretDiv.style.display = "none"
+				break;
+			case '2':
+				{% comment %} Infobip {% endcomment %}
+				apiKeyDiv.style.display = "block"
+				baseUrlDiv.style.display = "block"
+				usernameDiv.style.display = "none"
+				accountSIDDiv.style.display = "none"
+				authTokenDiv.style.display = "none"
+				apiSecretDiv.style.display = "none"
+				
+				break;
+			case '3':
+				{% comment %} Vonage {% endcomment %}
+			
+				apiSecretDiv.style.display = "block"
+				apiKeyDiv.style.display = "block"
+				baseUrlDiv.style.display = "none"
+				accountSIDDiv.style.display = "none"
+				authTokenDiv.style.display = "none"
+				usernameDiv.style.display = "none"
+				break;
+			case '4':
+				{% comment %} Twilio {% endcomment %}
+			
+				accountSIDDiv.style.display = "block"
+				authTokenDiv.style.display = "block"
+				baseUrlDiv.style.display = "none"
+				apiKeyDiv.style.display = "none"
+				usernameDiv.style.display = "none"
+				apiSecretDiv.style.display = "none"
+				break;
+			case '5':
+				{% comment %} VasPro {% endcomment %}
+				
+				apiKeyDiv.style.display = "block"
+				usernameDiv.style.display = "none"
+				baseUrlDiv.style.display = "none"
+				accountSIDDiv.style.display = "none"
+				authTokenDiv.style.display = "none"
+				apiSecretDiv.style.display = "none"
+				break;
+			default:
+				{% comment %} Africastalking {% endcomment %}
+				
+				apiKeyDiv.style.display = "block"
+				usernameDiv.style.display = "block"
+				baseUrlDiv.style.display = "none"
+				accountSIDDiv.style.display = "none"
+				authTokenDiv.style.display = "none"
+				apiSecretDiv.style.display = "none"
+				break;
+		}
+    
+	}
+  });
+
+ 	function isHiden(x) {
+  		return window.getComputedStyle(x).visibility === "hidden"
+	}
+
+	
+</script>
+<script>
+
+  $(document).ready(function() {
+     $("#form-submit").click(function(event) {
+        event.preventDefault();
+		var inp = $('#name').val();
+		if(inp == undefined || $.trim(inp).length < 1){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Enter a valid name
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step1-errors').html(error);
+			return;
+		}
+
+		var inp = $('#email').val();
+		if(inp == undefined || $.trim(inp).length < 1){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Invalid email
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step1-errors').html(error);
+			return;
+		}
+
+		$('#msform').submit();
+     });
+  });
+</script> 
+{% endblock scripts %}

@@ -1,0 +1,36 @@
+{% extends "base_map.html" %}{% load static %}{% load l10n %}
+{% block title %} Order tracking {% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	function initMap() {
+	  const map = new google.maps.Map(document.getElementById("map"), {
+		zoom: 11,
+		center: { lat: -1.263047, lng: 36.804736 },
+	  });
+
+
+	  // Add some markers to the map.
+	  // Note: The code uses the JavaScript Array.prototype.map() method to
+	  // create an array of markers based on a given "locations" array.
+	  // The map() method here has nothing to do with the Google Maps API.
+	  const markers = locations.map((location, i) => {
+		return new google.maps.Marker({
+		  position: location.coords,
+		  label: location.label,
+		});
+	  });
+	  // Add a marker clusterer to manage the markers.
+	  new MarkerClusterer(map, markers, {
+		imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+	  });
+
+	}
+	const locations = [
+		{% for object in object_list %}
+			{% if object.dropoff_lat and object.dropoff_lng %}
+			  { coords :{ lat: {{ object.dropoff_lat |floatformat:6}}, lng: {{ object.dropoff_lng |floatformat:6 }} }, label: "#{{ object.pk }}"},
+			{% endif %}
+		{% endfor %}
+	];
+</script>
+{% endblock scripts %}

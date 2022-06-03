@@ -1,0 +1,59 @@
+{% extends "base_iframe.html" %}{% load static %}{% load l10n %}
+{% block title %} Driver tracking {% endblock %}
+{% block content %}
+<!-- Row -->
+<div class="row">
+	<div class="col-xl-12">
+		<div class="dashboard-box margin-top-0">
+			<div class="single-page-section">
+				<div id="single-job-map-container">
+					<div id="singleListingMap" data-latitude="-1.263047" data-longitude="36.804736" data-map-icon="im im-icon-Hamburger"></div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+<!-- Row / End -->
+{% endblock content %}
+{% block scripts %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="{% static "theme/js/infobox.min.js" %}"></script>
+<script src="{% static "theme/js/markerclusterer.js" %}"></script>
+<script src="{% static "theme/js/maps.js" %}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={% if map_api %}{{map_api}}{% else %}AIzaSyDrEYEy6nXlouW4TCD_r3sGs44MwHAS3z4{% endif %}&callback=initMap&libraries=&v=weekly" async></script>
+<script type="text/javascript">
+	function initMap() {
+	  const map = new google.maps.Map(document.getElementById("singleListingMap"), {
+		zoom: 11,
+		center: { lat: -1.263047, lng: 36.804736 },
+	  });
+
+
+	  // Add some markers to the map.
+	  // Note: The code uses the JavaScript Array.prototype.map() method to
+	  // create an array of markers based on a given "locations" array.
+	  // The map() method here has nothing to do with the Google Maps API.
+	  const markers = locations.map((location, i) => {
+		return new google.maps.Marker({
+		  position: location.coords,
+		  label: location.label,
+		});
+	  });
+	  // Add a marker clusterer to manage the markers.
+	  new MarkerClusterer(map, markers, {
+		imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+	  });
+
+	}
+	const locations = [
+		{% for object in object_list %}
+			{% if object.get_driver_location %}
+			  { coords :{ lat: {{ object.get_driver_location.lat |floatformat:6}}, lng: {{ object.get_driver_location.lng|floatformat:6 }} }, label: "#{{ object.pk }}"},
+			{% endif %}
+		{% endfor %}
+	];
+</script>
+
+{% endblock scripts %}

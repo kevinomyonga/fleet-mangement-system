@@ -1,0 +1,65 @@
+{% load static %}
+<!-- User Menu -->
+<div class="header-widget">
+
+	<!-- Messages -->
+	<div class="header-notifications user-menu">
+		<div class="header-notifications-trigger">
+			<a href="#"><div class="user-avatar"><img src="{{ organization_user.user.get_thumbnail }}" alt=""></div></a>
+		</div>
+
+		<!-- Dropdown -->
+		<div class="header-notifications-dropdown">
+
+			<!-- User Status -->
+			<div class="user-status">
+				<div class="user-details">
+					<div class="user-avatar"><img src="{{ organization_user.user.get_thumbnail }}" alt=""></div>
+					<div class="user-name">
+						{{ organization_user.user.first_name }} {{organization_user.user.last_name }} 
+						<span>{{ organization_user.user.email }}</span>
+						{% if organization_user.organization.owner == current_user %}
+						<span><a href="{% url 'organization:detail' organization_user.organization.pk %}"><i class="icon-material-outline-settings"></i>&nbsp;{{ organization_user.organization.name }}</a></span>
+						{% else %}
+						<span>{{ organization_user.organization.name }}</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			{% for organization_user in organization_users %}
+				<div class="user-status">
+					<div class="user-details" href="{% url 'organization:switch' organization_user.pk %}">
+						<div class="user-avatar status-online"><img src="{{ organization_user.user.get_thumbnail }}" alt=""></div>
+						<div class="user-name">
+							<span>{{ organization_user.user.first_name }} {{organization_user.user.last_name }}</span>
+							<span><a href="{% url 'organization:switch' organization_user.pk %}">{{ organization_user.organization.name }} &nbsp;<i class="icon-material-outline-compare-arrows"></i></a></span>
+
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+			
+
+			<ul class="user-menu-small-nav">
+<!--				<li><a href="#">Create a new organization</a></li>-->
+				<li><a href="{% url 'accounts:logout' %}"><i class="icon-material-outline-power-settings-new"></i> Logout</a></li>
+			</ul>
+
+
+			</div>
+	</div>
+
+</div>
+<!-- User Menu / End -->
+
+<!-- Mobile Navigation Button -->
+<span class="mmenu-trigger">
+	<button class="hamburger hamburger--collapse" type="button">
+		<span class="hamburger-box">
+			<span class="hamburger-inner"></span>
+		</span>
+	</button>
+</span>
+<script type="text/javascript">
+var ws_connection_url = '{{ ws_connect_url }}';
+</script>

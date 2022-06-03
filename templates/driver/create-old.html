@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %} Drivers {% endblock %}
+{% block content %}
+<div>			
+	<!-- Dashboard Headline -->
+	<div class="dashboard-headline">
+		<h3>Add a new driver</h3>
+	</div>
+
+	<!-- Row -->
+	<div class="row">
+
+			<div class="col-xl-12">
+
+				<div class="dashboard-box margin-top-0">
+
+					<!-- Headline -->
+					<div class="headline">
+						<h3><i class="icon-feather-folder-plus"></i> Driver create form</h3>
+					</div>
+
+					<div class="content with-padding padding-bottom-10">
+						<div class="row">
+							<div class="col-xl-6">
+							{% for field in form %}
+							  {% if field.errors %}
+								{% for error in field.errors %}
+								<div class="alert alert-danger alert-dismissible fade show" role="alert">
+								  {{ error }}
+								  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+								</div>
+								{% endfor %}
+							  {% endif %}
+							{% endfor %}	
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xl-6">
+								<div class="submit-field">
+									<h5>Name</h5>
+									<input type="text" name="name" id="name" class="with-border">
+								</div>
+							</div>
+
+							<div class="col-xl-6">
+								<div class="submit-field">
+									<h5>Phone number</h5>
+									<input type="number" name="phonenumber" id="phonenumber" class="with-border">
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="col-xl-12">
+				<button class="button ripple-effect big margin-top-30" form="submit-form" id="submit-form"><i class="icon-feather-plus"></i> Create driver</button>
+			</div>
+	</div>
+	<!-- Row / End -->
+
+
+</div>
+<form action="" method="post" style="display:none" id="form-hidden">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+{% endblock content %}
+{% block scripts %}
+<script>
+  $(document).ready(function() {
+     $("#submit-form").click(function(event) {
+        event.preventDefault();
+		$('#id_phone_number').val($("#phonenumber").val());
+		$('#id_name').val($("#name").val());
+		$('#form-hidden').submit();
+     });
+  });
+</script>
+{% endblock scripts %}

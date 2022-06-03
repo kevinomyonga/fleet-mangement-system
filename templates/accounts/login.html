@@ -1,0 +1,60 @@
+{% extends "base0.html" %}
+{%block title %} Login {% endblock %}
+{% block content %}
+		<div class="col-xl-5 offset-xl-3">
+
+			<div class="login-register-page">
+				<div class="welcome-text">
+					<h3>Welcome to Getboda</h3>
+					<span>Don't have an account? <a href="{% url 'accounts:register' %}">Sign Up!</a></span>
+				</div>
+
+				{% for field in form %}
+				  {% if field.errors %}
+					{% for error in field.errors %}
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					  {{ error }}
+					  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+					{% endfor %}
+				  {% endif %}
+				{% endfor %}					
+				<!-- Form -->
+				<form method="post" id="login-form">
+					<div class="input-with-icon-left">
+						<i class="icon-material-baseline-mail-outline"></i>
+						<input type="email" class="input-text with-border" name="emailaddress" id="emailaddress" placeholder="Email Address" required/>
+					</div>
+
+					<div class="input-with-icon-left">
+						<i class="icon-material-outline-lock"></i>
+						<input type="password" class="input-text with-border" name="password" id="password" placeholder="Password" required/>
+					</div>
+					<!--<a href="#" class="forgot-password">Forgot Password?</a>-->
+				</form>
+				
+				<!-- Button -->
+				<button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit" form="login-form" id="form-login">Log In <i class="icon-material-outline-arrow-right-alt"></i></button>
+
+			</div>
+
+		</div>
+
+<form action="" method="post" style="display:none" id="form-hidden">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" id="submit-hidden">
+</form>
+{% endblock %}
+{% block scripts %}
+<script>
+  $(document).ready(function() {
+     $("#form-login").click(function(event) {
+        event.preventDefault();
+		$('#id_email').val($("#emailaddress").val());
+		$('#id_password').val($("#password").val());
+		$('#form-hidden').submit();
+     });
+  });
+</script>
+{% endblock %}

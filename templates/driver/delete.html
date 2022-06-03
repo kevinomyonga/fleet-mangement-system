@@ -1,0 +1,68 @@
+{% extends "base.html" %}{% load static %}
+{% block title %} Drivers {% endblock %}
+{% block styles %} 
+<link rel="stylesheet" href="{% static "theme/css/jquery.datetimepicker.min.css" %}">
+<link rel="stylesheet" href="{% static "theme/css/form.css" %}">
+<link rel="stylesheet" href="{% static "theme/tel/css/intlTelInput.min.css" %}">
+{% endblock %}
+
+{% block content %}
+<div>			
+
+	<!-- Row -->
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+
+
+				<div class="content with-padding padding-bottom-10">
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+            <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+				<p>Are you sure you want to the delete this driver</p>
+				<form method="post">{% csrf_token %}
+					<input type="submit" value="Yes, delete">
+				</form>
+				<p><a href="{% url 'driver:index' object.pk %}">No, cancel</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- Row / End -->
+
+</div>
+{% endblock content %}
+{% block scripts %}
+<script src="{% static "theme/tel/js/intlTelInput.min.js" %}"></script>
+<script>
+  $(document).ready(function() {
+     $("#form-submit").click(function(event) {
+        event.preventDefault();
+
+		var inp = $('#name').val();
+		if(inp == undefined || $.trim(inp).length < 1){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Invalid driver name
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step1-errors').html(error);
+			return;
+		}
+
+		$('#msform').submit();
+     });
+  });
+</script>
+{% endblock scripts %}

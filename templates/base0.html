@@ -1,0 +1,109 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Getboda - {% block title %}{% endblock %}</title>
+	<link rel="icon" href="{% static "theme/images/getboda-logo.png" %}">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<!-- CSS
+	================================================== -->
+	<link rel="stylesheet" href="{% static "theme/css/bootstrap.min.css" %}">
+	<link rel="stylesheet" href="{% static "theme/css/style.css" %}?v=1">
+	<link rel="stylesheet" href="{% static "theme/css/colors/blue.css" %}">
+	<link rel="stylesheet" href="{% static "theme/css/custom.css" %}">
+
+</head>
+<body>
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+
+<div class="clearfix"></div>
+<!-- Header Container / End -->
+
+<!-- Titlebar
+================================================== -->
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="col-xl-5 offset-xl-3">
+				{% for message in messages %}
+					{% if message.tags == 'error' %}
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 {{ message |safe }}
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+					{% else %}
+				<div class="alert alert-{{ message.tags }}  alert-dismissible fade show" role="alert">
+				 {{ message|safe }}
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+					{% endif %}
+				{% endfor %}				
+			</div>
+			{% block titlebar %} {% endblock %}
+		</div>
+	</div>
+</div>
+
+
+<!-- Page Content
+================================================== -->
+<div class="container holder min-height">
+	<div class="row">
+		<div class="welcome-text">
+			<a href="https://www.getboda.co.ke/"><img src="{% static "theme/images/getboda-horizontal.png" %}" alt=""></a>
+		</div>
+	</div>
+
+	<div class="row">
+		{% block content %} {% endblock %}
+	</div>
+</div>
+
+
+<!-- Spacer -->
+<div class="margin-top-70"></div>
+<!-- Spacer / End-->
+
+<!-- Footer
+================================================== -->
+<div id="footer">
+	<!-- Footer Copyrights -->
+	<div class="footer-bottom-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-xl-12">
+					<p class="footer-links text-center">Designed and Developed by <a class="grey" href="https://www.getboda.co.ke/">Getboda Technology</a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Footer Copyrights / End -->
+
+</div>
+<!-- Footer / End -->
+
+</div>
+<!-- Wrapper / End -->
+
+<!-- Scripts
+================================================== -->
+<script src="{% static "theme/js/jquery-3.4.1.min.js" %}"></script>
+<script src="{% static "theme/js/jquery-migrate-3.1.0.min.js" %}"></script>
+<script src="{% static "theme/js/mmenu.min.js" %}"></script>
+<script src="{% static "theme/js/tippy.all.min.js" %}"></script>
+<script src="{% static "theme/js/simplebar.min.js" %}"></script>
+<script src="{% static "theme/js/bootstrap.bundle.min.js" %}"></script>
+<script src="{% static "theme/js/bootstrap-slider.min.js" %}"></script>
+<script src="{% static "theme/js/bootstrap-select.min.js" %}"></script>
+<script src="{% static "theme/js/snackbar.js" %}"></script>
+<script src="{% static "theme/js/clipboard.min.js" %}"></script>
+<script src="{% static "theme/js/counterup.min.js" %}"></script>
+<script src="{% static "theme/js/magnific-popup.min.js" %}"></script>
+<script src="{% static "theme/js/slick.min.js" %}"></script>
+<script src="{% static "theme/js/custom.js" %}"></script>
+{% block scripts %} {% endblock %}
+</body>
+</html>

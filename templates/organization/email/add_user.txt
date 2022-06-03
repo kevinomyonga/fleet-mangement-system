@@ -1,0 +1,15 @@
+{% extends "base_email.txt" %}
+{% block title %} Hi {{ name }}, {% endblock %}
+
+{% block content %}
+{{ invited_by }} has invited you to join {{ organization_name }}
+
+
+Click in the link below to become a member
+
+Copy paste the link below to join {{ organization_name }}
+
+
+{{ member_join_url }}
+
+{% endblock content %}

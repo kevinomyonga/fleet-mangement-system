@@ -1,0 +1,345 @@
+{% extends "base.html" %}{% load static %}{% load l10n %} {% load time_to_local %}
+{% block title %} Order #{{ object.pk }} {% endblock %}
+{% block content %}
+<div>
+
+	<!-- Dashboard Headline -->
+	<div class="dashboard-headline">
+		<h3>Order ID: #{{ object.pk }}</h3>
+	</div>
+
+	<!-- Row -->
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+
+
+				<div class="content with-padding padding-bottom-10">
+
+					<div class="row">
+						<div class="col-xl-12">
+						{% for field in form %}
+						  {% if field.errors %}
+							{% for error in field.errors %}
+							<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							  {{ error }}
+							  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+							{% endfor %}
+						  {% endif %}
+						{% endfor %}
+						</div>
+					</div>
+
+
+
+					<div class="row">
+
+						<!-- Content -->
+						<div class="col-xl-8 col-lg-8">
+							<div class="row">
+								<div class="col-xl-12">
+									<div class="single-page-section">
+										<h3 class="margin-bottom-30">{{object.pickup_location_name }} &raquo;&raquo;&raquo; {{object.dropoff_location_name }}</h3>
+										<div id="single-job-map-container">
+											<div id="singleListingMap" data-latitude="{{ object.pickup_lat|floatformat:6 }}" data-longitude="{{ object.pickup_lng|floatformat:6 }}" data-map-icon="im im-icon-Hamburger"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							{% if object.signature or object.pod_images %}
+							<div class="row">
+								{% if object.signature %}
+								<div class="col-xl-4">
+									<a href="{{ object.signature }}" rel="superbox[gallery][my_gallery]"><img src="{{ object.signature }}"/></a><br>
+									<span class="text-mutes">Signature<map>
+								</div>
+								{% endif %}
+								{% if order.pod_images %}
+									{% for pod_image in order.pod_images %}
+								<div class="col-xl-4">
+									<a href="{{ pod_image }}" rel="superbox[gallery][my_gallery]"><img src="{{ pod_image }}"/></a><br>
+									<span class="text-mutes">POD image<map>
+								</div>
+									{% endfor %}
+								{% endif %}
+							</div>
+							{% endif %}
+
+
+							<!-- ORDER TRACKING INFO -->
+							<div class="container card">
+								{% include 'order/order_tracking_new.html' %}
+							</div>
+							<!-- TRACKING INFO -->
+
+						</div>
+
+
+						<!-- Sidebar -->
+						<div class="col-xl-4 col-lg-4">
+
+
+							<div class="sidebar-container">
+								<div class="always-visible">
+								{% if object.state != object.DELIVERED %}
+									<a href="{% url 'order:state-iframe' object.pk %}" class="button blue ripple-effect"  rel="superbox[iframe]"><i class="icon-material-baseline-notifications-none"></i> Change order status</a>
+
+									<a href="{% url 'order:assign-iframe' object.pk %}" class="button blue ripple-effect"  rel="superbox[iframe]"><i class="icon-line-awesome-motorcycle"></i> {% if object.rider %} Reassign driver {% else %} Assign driver{% endif %}</a>
+								{% endif %}
+								</div>
+
+								<!-- Sidebar Widget -->
+								<div class="sidebar-widget">
+									<div class="job-overview">
+										<div class="job-overview-headline">Order Summary <br>ID:<b>#{{ object.pk }}</b> {% if object.ref %}<br>Ref:<b>{{ object.ref }}</b> {% endif %}</div>
+										<div class="job-overview-inner">
+											<ul>
+												{% if object.preffered_delivery_date %}
+												<li>
+													<i class="icon-material-outline-date-range"></i>
+													<span>Preffered delivery date</span>
+													<h5>{{ object.preffered_delivery_date|date:'d M, Y'}} - {{ object.get_preffered_delivery_period_display }}</h5>
+												</li>
+												{% endif %}
+												<li>
+													<i class="icon-material-outline-location-on"></i>
+													<span>Pickup</span>
+													<h5>{{object.pickup_location_name }} {% if object.pickup_location_name_more %} - {{ object.pickup_location_name_more }} {% endif %}</h5>
+													{% if object.pickup_contact_name %}
+														<span class="capitalize">{{object.pickup_contact_name  | lower }}</span>
+													{% endif %}
+													{% if object.pickup_contact_phone_number %}
+														<span class="capitalize"><a href="tel:+{{object.pickup_contact_phone_number}}">+{{object.pickup_contact_phone_number}}</a></span>
+													{% endif %}
+													{% if object.pickup_contact_email %}
+														<span><a href="mailto:{{object.pickup_contact_email}}">{{object.pickup_contact_email | lower}}</a></span>
+													{% endif %}
+													{% if object.pickup_location_details %}
+														<p>{{object.pickup_location_details}}</p>
+													{% endif %}
+												</li>
+												<li>
+													<i class="icon-material-outline-location-on"></i>
+													<span>Dropoff</span>
+													<h5>{{object.dropoff_location_name }} {% if object.dropoff_location_name_more %} - {{ object.dropoff_location_name_more }} {% endif %}</h5>
+													{% if object.dropoff_contact_name %}
+														<span class="capitalize">{{object.dropoff_contact_name  | lower }}</span>
+													{% endif %}
+													{% if object.dropoff_contact_phone_number %}
+														<span class="capitalize"><a href="tel:+{{object.dropoff_contact_phone_number}}">+{{object.dropoff_contact_phone_number}}</a></span>
+													{% endif %}
+
+													{% if object.dropoff_contact_email %}
+														<span><a href="mailto:{{object.dropoff_contact_email}}">{{object.dropoff_contact_email | lower }}</a></span>
+													{% endif %}
+
+													{% if object.dropoff_location_details %}
+														<p>{{object.dropoff_location_details}}</p>
+													{% endif %}
+
+												</li>
+
+												{% if object.items.count > 0 %}
+												<li>
+													<i class="icon-material-outline-shopping-cart"></i>
+													<span>Items</span>
+													{% for item in object.items.all %}
+													<h5>{{item.name}} {% if item.length and item.height and item.width %} {{item.length}}cms X {{item.width}}cms X {{item.height}}cms {% endif %} {% if item.price %} Ksh. {{ item.price }} {% endif %}</h5>
+													{% endfor %}
+												</li>
+												{% endif %}
+
+
+
+
+												{% if object.rider %}
+												<li>
+													<i class="icon-line-awesome-motorcycle"></i>
+													<span>Rider</span>
+													<h5>{{ object.rider.full_names }}</h5>
+													<span class="capitalize"><a href="tel:+{{object.rider.phone_number}}">+{{object.rider.phone_number}}</a></span>
+												</li>
+												{% endif %}
+
+												<li>
+													<i class="icon-line-awesome-money"></i>
+													<span>Payment method</span>
+													<h5>{{ object.get_payment_method_display }} {% if object.payment_method == object.POSTPAID or object.payment_method == object.POSTPAID_MM %} {% if object.paid %} (Paid) {% else %} (Not paid) {% endif %}{% endif %}</h5>
+													{% if object.price %}<span>Ksh. {{ object.price|localize }} </span>{% endif %}
+												</li>
+
+												{% if object.payment_notes %}
+												<li>
+													<i class="icon-line-awesome-money"></i>
+													<span>Payment notes</span>
+													<h5>{{ object.payment_notes }}</h5>
+												</li>
+												{% endif %}
+
+												{% if object.weight %}
+												<li>
+													<i class="icon-line-awesome-money"></i>
+													<span>Weight</span>
+													<h5>{{ object.weight }} Kgs</h5>
+												</li>
+												{% endif %}
+
+												{% if object.length and object.width and object.height %}
+												<li>
+													<i class="icon-line-awesome-money"></i>
+													<span>Dimensions</span>
+													<h5>{{ object.length }} cms X {{ object.width }} cms X {{ object.height }} cms</h5>
+												</li>
+												{% endif %}
+
+
+												{% if object.notes %}
+												<li>
+													<i class="icon-line-awesome-sticky-note"></i>
+													<span>Note</span>
+													<h5>{{ object.notes }}</h5>
+												</li>
+												{% endif %}
+
+
+												{% if object.added_by %}
+												<li>
+													<i class="icon-line-awesome-motorcycle"></i>
+													<span>Created by</span>
+													<h5>{{ object.added_by.full_names }}</h5>
+												</li>
+												{% endif %}
+
+												<li>
+													<i class="icon-line-awesome-clock-o"></i>
+													<span></span>
+													{% if object.datetime_ordered %}
+														{% time_to_local request object.datetime_ordered as datetime_ordered %}
+														<h5>Ordered: {{ datetime_ordered }}</h5>
+													{%  endif %}
+
+													{% time_to_local request object.created as created %}
+													<h5>Submited: {{ created }}</h5>
+
+													{% if object.datetime_assigned %}
+														{% time_to_local request object.datetime_assigned as datetime_assigned %}
+														<h5>Driver assigned: {{ datetime_assigned }}</h5>
+													{% endif %}
+													{% if object.datetime_accepted %}
+														{% time_to_local request object.datetime_accepted as datetime_accepted %}
+														<h5>Driver accepted: {{ datetime_accepted }}</h5>
+													{% endif %}
+													{% if object.datetime_started %}
+														{% time_to_local request object.datetime_started as datetime_started %}
+														<h5>Driver started: {{ datetime_started }}</h5>
+													{% endif %}
+													{% if object.datetime_arrived %}
+														{% time_to_local request object.datetime_arrived as datetime_arrived %}
+														<h5>Driver arrived: {{ datetime_arrived }}</h5>
+													{% endif %}
+													{% if object.datetime_completed %}
+														{% time_to_local request object.datetime_completed as datetime_completed %}
+														<h5>Completed: {{ datetime_completed }}</h5>
+													{% endif %}
+													{% if object.datetime_reviewed %}
+														{% time_to_local request object.datetime_reviewed as datetime_reviewed %}
+														<h5>Reviewed: {{ datetime_reviewed }}</h5>
+													{% endif %}
+													{% if object.datetime_failed %}
+														{% time_to_local request object.datetime_failed as datetime_failed %}
+														<h5>Datetime failed: {{ datetime_failed }}</h5>
+													{% endif %}
+												</li>
+
+												<li>
+													<i class="icon-material-baseline-notifications-none"></i>
+													<span>Status</span>
+													<h5>{{ object.get_state_display }}</h5>
+												</li>
+
+												{% if object.failure_reason %}
+												<li>
+													<i class="icon-material-outline-format-quote"></i>
+													<span>Failure reason</span>
+													<h5>{{ object.failure_reason }}</h5>
+												</li>
+												{% endif %}
+
+												{% if object.rating %}
+												<li>
+													<i class="icon-material-outline-rate-review"></i>
+													<span>Rating</span>
+													<div class="star-rating" data-rating="{{ object.rating }}"></div>
+													<h5>{{ object.review }}</h5>
+												</li>
+												{% endif %}
+											</ul>
+										</div>
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- Row / End -->
+
+</div>
+<form action="" method="post" style="display:none" id="form-hidden">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+{% endblock content %}
+{% block scripts %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="{% static "theme/js/infobox.min.js" %}"></script>
+<script src="{% static "theme/js/markerclusterer.js" %}"></script>
+<script src="{% static "theme/js/maps.js" %}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={% if map_api %}{{map_api}}{% else %}AIzaSyDrEYEy6nXlouW4TCD_r3sGs44MwHAS3z4{% endif %}&callback=initMap&libraries=&v=weekly" async></script>
+<script type="text/javascript">
+	function initMap() {
+	  const directionsService = new google.maps.DirectionsService();
+	  const directionsRenderer = new google.maps.DirectionsRenderer();
+	  const map = new google.maps.Map(document.getElementById("singleListingMap"), {zoom: 7});
+	  directionsRenderer.setMap(map);
+
+		calculateAndDisplayRoute(directionsService, directionsRenderer);
+	}
+
+	function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+		if(
+			{{ object.pickup_lat|floatformat:6 }} == 0 ||
+			{{ object.pickup_lng|floatformat:6 }} == 0 ||
+			{{ object.dropoff_lng|floatformat:6 }} == 0 ||
+			{{ object.dropoff_lat|floatformat:6 }} == 0
+
+		)  return;
+	  directionsService.route(
+		{
+		  origin: { lat: {{ object.pickup_lat|floatformat:6 }}, lng: {{ object.pickup_lng|floatformat:6 }} },
+		  destination: { lat: {{ object.dropoff_lat|floatformat:6 }}, lng: {{ object.dropoff_lng|floatformat:6 }} },
+		  travelMode: google.maps.TravelMode.DRIVING,
+		},
+		(response, status) => {
+		  if (status === "OK") {
+		    directionsRenderer.setDirections(response);
+		  } else {
+		    console.log("Directions request failed due to " + status);
+		  }
+		}
+	  );
+}
+</script>
+
+{% endblock scripts %}

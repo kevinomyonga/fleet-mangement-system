@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %} Dashboard {% endblock %}
+{% block content %}
+<div>
+
+	<!-- Dashboard Headline -->
+	<div class="dashboard-headline">
+		<h3>Hi, {{ request.user.first_name }}!</h3>
+	</div>
+
+	
+	<!-- Row -->
+	<div class="row">
+
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+
+				<!-- Headline -->
+				<div class="headline">
+					<h3><i class="icon-feather-users"></i> {{ request.user.first_name }}</h3>
+				</div>
+
+				<div class="content with-padding padding-bottom-20">
+
+					<div class="row">
+
+						<div class="col">
+							<div class="row">
+
+								<div class="col-xl-6">
+									<h5>Name</h5>
+									<span>{{ request.user.full_names }}</span>
+								</div>
+
+								<div class="col-xl-6">
+									<h5>Token</h5>
+									<span>{{ token }}</span>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- Row / End -->
+</div>
+
+
+
+{% endblock content %}

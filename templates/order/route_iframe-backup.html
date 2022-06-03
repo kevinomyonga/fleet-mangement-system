@@ -1,0 +1,495 @@
+{% extends "base_full.html" %}{% load static %}{% load l10n %}
+{% block title %} Driver tracking {% endblock %}
+{% block styles %}
+<style type="text/css">
+  .compact-list-layout .job-listing:before{
+    opacity: 0 !important;
+  }
+  .full-page-content-inner{
+    padding: 5px;
+    min-height: 100vh;
+  }
+  .full-page-sidebar .sidebar-container{
+    padding: 5px;
+  }
+  .full-page-container.with-map .full-page-content-container {
+    flex: 0 0 40vw;
+  }
+</style>
+{% endblock %}
+{% block content %} 
+<!-- Page Content
+================================================== -->
+<div class="full-page-container with-map">
+
+
+    <!-- Full Page Content -->
+    <div class="full-page-content-container" data-simplebar>
+      <div class="full-page-content-inner">
+
+
+        <div class="listings-container compact-list-layout">
+        
+          <div class="dashboard-box margin-top-0">
+
+            <div class="content with-padding">
+              <div class="row">
+                <div class="col-xl-6">
+                  <div id="div_id_created_date_min"  class="submit-field">
+                    <label for="state" class="">Date range:</label>
+                    <div id="reportrange">
+                      <i class="fa fa-calendar"></i>&nbsp;
+                      <span></span> <i class="icon-line-awesome-caret-down"></i>
+                      <input type="hidden" name="page" id="page" value=""/>
+                      <input type="hidden" name="order" id="order" value=""/>
+                      <input type="hidden" name="per_page" id="per_page" value=""/>
+                      <input type="hidden" name="order_by" id="order_by" value=""/>
+                      <input type="hidden" name="end_date" id="end_date" value=""/>
+                      <input type="hidden" name="start_date" id="start_date" value=""/>
+                    </div>
+                  </div>
+                </div>
+      
+                <div class="col-xl-6">
+                  <div id="div_id_submit" class="submit-field">
+                    <label for="state" class="">&nbsp;</label>
+                    <div class="searchs-container">
+                      <div class="search-input-container">
+                        <input type="text" name="s" id="s" value="" class="search-input" placeholder="Search by ID, ref, location"/>
+                        <button id="submit-search" class="search-input-button ripple-effect"><i class="icon-material-outline-search"></i></button>
+                      </div>
+                      <div class="keywords-list">
+                        <!-- keywords go here -->
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Headline -->
+            
+            <div class="content">
+        
+              <div class="headline orders-available">
+                <div class="checkbox">
+                  <input type="checkbox" id="checkbox" class="checkbox">
+                  <label for="checkbox"><span class="checkbox-icon"></span> <h3><i class="icon-material-outline-assignment"></i> <span id="order-count"></span>  orders</h3></label>
+                </div>
+              </div>
+              <div class="row no-orders-available">
+                <div class="col-xl-12">
+                  <section id="not-found" class="center margin-top-50 margin-bottom-25">
+                    <h2><i class="icon-line-awesome-question-circle"></i></h2>
+                    <p>No orders to display</p>
+                  </section>
+                </div>
+              </div>
+              <div class="orders-available">
+                <ul class="dashboard-box-list" id="orders-ajax">
+      
+                </ul>
+                <!--
+                <div class="col-xl-12">
+                  <div class="--">
+                    <div class="content">
+                      <div class="job-listing">
+                        <div class="job-listing-description">
+                          <div class="job-listing-footer padding-reset">
+      
+                            <ul>
+                              
+                                <li class="page-item disabled no-margin"><a class="page-link" href="#"><span>«</span></a></li>
+                                <li class="page-item disabled no-margin"><a class="page-link" href="#"><span>‹</span></a></li>
+                              
+                                <li class="page-item2 disabled">Page</li>
+                                <li class="page-item active">
+                                  <span class="current">
+                                          <input style="width:5.5em;display:inline" value="1" name="page" type="number" max="1" min="1" class="textinput textInput form-control">
+                                          
+                                  </span>
+                                </li>
+                                <li class="page-item2 disabled">of 1 at</li>
+                                <li class="page-item disabled"><select class="selected-change" id="per_page" name="per_page" style="text-transform:capitalize;display:inline">
+                                            <option value="2">2</option>
+                                            <option value="5">5</option>
+                                            <option value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50" selected="">50</option>
+                                            <option value="100">100</option>
+                                            <option value="150">150</option>
+                                            <option value="200">200</option>
+                                          </select></li>
+                                <li class="page-item2 disabled">per page</li>
+      
+      
+                              
+                                <li class="page-item disabled no-margin"><a class="page-link" href="#"><span>›</span></a></li>
+                                <li class="page-item disabled no-margin"><a class="page-link" href="#"><span>»</span></a></li>
+                              
+                                <li class="page-item active no-margin" style="padding:8px 26px">
+                                  <span>Showing <span style="font-weight: bold;">1</span> to <span style="font-weight: bold;">1</span> of <span style="font-weight: bold;">1</span> results</span>
+                                </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              -->
+
+              </div>
+
+              
+    
+      
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    <!-- Full Page Content / End -->
+
+
+
+	<!-- Full Page Map -->
+	<div class="full-page-map-container">
+		
+		<!-- Enable Filters Button -->
+		<div class="filter-button-container">
+			<button class="enable-filters-button">
+				<i class="enable-filters-button-icon"></i>
+				<span class="show-text" id="optimize-route">Optimize route</span>
+				<span class="hide-text">Hide routes</span>
+			</button>
+			<div class="filter-button-tooltip">Click to expand sidebar with filters!</div>
+		</div>
+		
+		<!-- Map -->
+	    <div id="map" data-map-scroll="true"></div>
+	</div>
+	<!-- Full Page Map / End -->
+	
+	<div class="full-page-sidebar hidden-sidebar">
+		<div class="full-page-sidebar-inner" data-simplebar>
+
+      <div class="sidebar-container">
+        <!-- Sidebar Widget -->
+        <div class="sidebar-widget">
+          <div class="job-overview">
+            <div class="job-overview-headline">Routes</div>
+            <div class="job-overview-inner">
+              <ul id="drivers-ajax">
+            
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+		</div>
+	</div>
+
+{% endblock %}
+{% block scripts %}
+<script
+src="https://maps.googleapis.com/maps/api/js?key={% if map_api %}{{map_api}}{% else %}AIzaSyDrEYEy6nXlouW4TCD_r3sGs44MwHAS3z4{% endif %}&callback=initMap&libraries=geometry&v=weekly"
+async></script>
+<script type="text/javascript">
+
+let map;
+let markers = [];
+let markerCluster;
+let selectedOrders = [];
+let colors = ['#3266cc', '#9d4d9a', '#4f971b', '#dc4126', '#dc4126'];
+
+function initMap() {
+  var mapProp = {
+      center: new google.maps.LatLng(-1.254766, 36.797427),
+      zoom: 9,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+
+        // Google Map Style
+        styles: [{"featureType":"poi","elementType":"labels.text.fill","stylers":[{"color":"#747474"},{"lightness":"23"}]},{"featureType":"poi.attraction","elementType":"geometry.fill","stylers":[{"color":"#f38eb0"}]},{"featureType":"poi.government","elementType":"geometry.fill","stylers":[{"color":"#ced7db"}]},{"featureType":"poi.medical","elementType":"geometry.fill","stylers":[{"color":"#ffa5a8"}]},{"featureType":"poi.park","elementType":"geometry.fill","stylers":[{"color":"#c7e5c8"}]},{"featureType":"poi.place_of_worship","elementType":"geometry.fill","stylers":[{"color":"#d6cbc7"}]},{"featureType":"poi.school","elementType":"geometry.fill","stylers":[{"color":"#c4c9e8"}]},{"featureType":"poi.sports_complex","elementType":"geometry.fill","stylers":[{"color":"#b1eaf1"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":"100"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"},{"lightness":"100"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffd4a5"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffe9d2"}]},{"featureType":"road.local","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"weight":"3.00"}]},{"featureType":"road.local","elementType":"geometry.stroke","stylers":[{"weight":"0.30"}]},{"featureType":"road.local","elementType":"labels.text","stylers":[{"visibility":"on"}]},{"featureType":"road.local","elementType":"labels.text.fill","stylers":[{"color":"#747474"},{"lightness":"36"}]},{"featureType":"road.local","elementType":"labels.text.stroke","stylers":[{"color":"#e9e5dc"},{"lightness":"30"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"visibility":"on"},{"lightness":"100"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#d2e7f7"}]}]
+  };
+  map = new google.maps.Map(document.getElementById('map'), mapProp);
+
+  //google.maps.event.addListener(map, 'click', showTempMarker);
+  markerCluster = new MarkerClusterer(map, {
+    imagePath:
+      "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+  });
+}
+function showTempMarker(e) {
+  var lat = e.latLng.lat().toFixed(5);
+  var lng = e.latLng.lng().toFixed(5);
+  var latLng = { lat: parseFloat(lat), lng: parseFloat(lng)};
+  new google.maps.Marker({
+    position: latLng,
+    map
+  });
+}
+$(function(){
+
+  $.get( "{% url 'order:json' %}", get_orders);
+
+  $('#optimize-route').on('click', function() {
+    $('#drivers-ajax').html("");
+    query = {'orders' : selectedOrders };
+    $.post( "/order/route/json", query, function( data ) {
+      d = jQuery.parseJSON(data);
+      console.log(d);
+      initMap();
+      var i = 0;
+      var bounds = new google.maps.LatLngBounds();
+      markerCluster.clearMarkers();
+      d.routes.forEach(function(element) {
+        new google.maps.Polyline({
+          path: google.maps.geometry.encoding.decodePath(element.geometry),
+          strokeColor: colors[i%4],
+          strokeOpacity: 0.9,
+          strokeWeight: 5,
+          map: map,
+        });
+        i++;
+        $('#drivers-ajax').append(`
+          <li>
+						<i class="icon-feather-truck"></i>
+						<span>Vehicle #${i}</span>
+					</li>
+          `);
+
+        element.steps.forEach(function(step) {
+          var latLng = { lat: step.location[1], lng: step.location[0]};
+          bounds.extend(latLng);
+          if(step.type != 'job'){
+            $('#drivers-ajax').append(`
+                <li>
+                  <i class="icon-material-outline-location-on"></i>
+                  <h5>${step.type}</h5>
+                </li>`
+                );
+            var marker = new google.maps.Marker({
+              position: latLng,
+              icon: '{% static "theme/images/driver-marker.png" %}',
+              map,
+            });
+          } else {
+            if(step.description != undefined && step.description.length > 0 ){
+              $('#drivers-ajax').append(`
+                <li>
+                  <i class="icon-material-outline-location-on"></i>
+                  <h5>${step.description}</h5>
+                </li>`
+                );
+            } else {
+              $('#drivers-ajax').append(`
+                <li>
+                  <i class="icon-material-outline-location-on"></i>
+                  <h5>${step.location[1]},${step.location[0]}</h5>
+                </li>`
+                );            
+            }
+            var marker = new google.maps.Marker({
+              position: latLng,
+              icon: '{% static "theme/images/order-marker.png" %}',
+              map,
+            });
+            markers.push(marker);
+          }
+        });
+
+      });
+      markerCluster.addMarkers(markers);
+      markerCluster.repaint();
+      map.fitBounds(bounds);
+    });
+	});
+  $('#submit-search').on('click', function() {
+    var s = $('#s').val();
+    var page = $('#page').val();
+    var per_page = $('#per_page').val();
+    var order = $('#order').val();
+    var order_by = $('#order_by').val();
+    var end_date = $('#end_date').val();
+    var start_date = $('#start_date').val();
+    query = { 
+      's': s, 
+      'page' : page,  
+      'order' : order,
+      'per_page' : per_page, 
+      'order_by' : order_by, 
+      'end_date' : end_date, 
+      'start_date' : start_date 
+    }
+    $.get( "{% url 'order:json' %}", query, get_orders);
+	});
+
+  $("#orders-ajax").delegate(".checkbox2", "click", function(){
+    var id = $(this).data("id");
+    if ($(this).is(":checked")) {
+      console.log("checked");
+      selectedOrders.push(id);
+    } else {
+      console.log("unchecked");
+      selectedOrders = selectedOrders.filter(function(e) { return e !== id })
+    }
+    redrawMarkers();
+  });
+  $('#checkbox').on('click', function() {
+    if ($(this).is(":checked")) {
+      console.log("checked");
+      $('.checkbox2').each(function(i, obj) {
+        var id = $(obj).data("id");
+        console.log(id);
+        selectedOrders = selectedOrders.filter(function(e) { return e !== id });
+        selectedOrders.push(id);
+      });
+      $('.checkbox2').prop('checked', true);
+    } else {
+      console.log("unchecked");
+      $('.checkbox2').each(function(i, obj) {
+        var id = $(obj).data("id");
+        console.log(id);
+        selectedOrders = selectedOrders.filter(function(e) { return e !== id });
+      });
+      $('.checkbox2').prop('checked', false);
+    }
+    redrawMarkers();
+	});
+
+
+$('#reportrange').daterangepicker({
+    ranges: {
+      'Today': [moment(), moment()],
+      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+      'Last 90 Days': [moment().subtract(90, 'days'), moment()],
+      'Last 6 months': [moment().subtract(180, 'days'), moment()],
+      'Last 12 months': [moment().subtract(365, 'days'), moment()],
+      'This Month': [moment().startOf('month'), moment().endOf('month')],
+      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    }
+  }, cb);
+});
+
+
+function redrawMarkers(){
+  console.log(selectedOrders);
+  markerCluster.clearMarkers();
+
+  for (var i = 0; i < selectedOrders.length; i++) {
+    var id = selectedOrders[i];
+    var selectedOrderID = `#checkbox-${id}`;
+    var pickupLat = $(selectedOrderID).data("pickuplat");
+    var pickupLng = $(selectedOrderID).data("pickuplng");
+    var pickupLatLng = { lat: parseFloat(pickupLat), lng: parseFloat(pickupLng)};
+    var dropoffLat = $(selectedOrderID).data("dropofflat");
+    var dropoffLng = $(selectedOrderID).data("dropofflng");
+    var dropoffLatLng = { lat: parseFloat(dropoffLat), lng: parseFloat(dropoffLng)};
+    var marker = new google.maps.Marker({
+      position: dropoffLatLng,
+      icon: '{% static "theme/images/order-marker.png" %}',
+      map,
+      title: `Order #${id} - dropoff`,
+    });
+    markerCluster.addMarker(marker);
+  }
+  markerCluster.repaint();
+}
+
+function cb(start, end) {
+  $('#reportrange span').html(start.format('MMM DD, YYYY') + ' - ' + end.format('MMM DD, YYYY'));
+  $('#end_date').val(end.format('MMM DD, YYYY'));
+  $('#start_date').val(start.format('MMM DD, YYYY'));
+  var s = $('#s').val();
+  var page = $('#page').val();
+  var per_page = $('#per_page').val();
+  var order = $('#order').val();
+  var order_by = $('#order_by').val();
+  var end_date = $('#end_date').val();
+  var start_date = $('#start_date').val();
+  query = { 
+    's': s, 
+    'page' : page,  
+    'order' : order,
+    'per_page' : per_page, 
+    'order_by' : order_by, 
+    'end_date' : end_date, 
+    'start_date' : start_date 
+  }
+  $.get( "{% url 'order:json' %}", query, get_orders);
+}
+
+function get_orders( data ) {
+  d = jQuery.parseJSON(data);
+  items = d.items;
+  $('#orders-ajax').html("");
+  if(items.length > 0){
+    items.forEach(function(element) {
+      console.log(element);
+      var ref = '';
+      if(element.ref != undefined){
+        ref = `<li><i class="icon-material-outline-business-center"></i> Ref: <strong>${element.ref}</strong></li>`;
+      }
+      var html = `
+            <li id="order-${element.ID}">
+                <div class="job-listing">
+                  <div class="job-listing-details">
+                    <div class="checkbox checkbox1">
+                        <input 
+                        type="checkbox" 
+                        id="checkbox-${element.ID}" 
+                        class="checkbox2" 
+                        value="${element.ID}"
+                        data-dropofflat="${element.dropoff.location.coords.lat}" 
+                        data-dropofflng="${element.dropoff.location.coords.lng}" 
+                        data-pickuplat="${element.pickup.location.coords.lat}" 
+                        data-pickuplng="${element.pickup.location.coords.lng}" 
+                        data-id="${element.ID}" 
+                        />
+                        <label for="checkbox-${element.ID}"><span class="checkbox-icon"></span> </label>										
+                      </div>
+
+                    <div class="job-listing-description">
+                      <h3 class="job-listing-title">
+                        <span>${element.pickup.location.address} »»» ${element.dropoff.location.address}</span>
+                      </h3>
+                      <div class="job-listing-footer">
+                        <ul>
+                          <li><i class="icon-material-outline-business-center"></i> ID: <strong>#${element.ID}</strong></li> 
+                          ${ref} 
+                          <li><i class="icon-material-outline-access-time"></i>${element.datetime_ordered}</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>              
+              </li>
+              `;
+        $('#orders-ajax').append(html);
+
+        $('.orders-available').show();
+        $('.no-orders-available').hide();
+    });
+  } else {
+    $('.no-orders-available').show();
+    $('.orders-available').hide();
+  }
+  $('#s').val(d.s);
+  $('#page').val(d.page);
+  $('#per_page').val(d.per_page);
+  $('#order').val(d.order);
+  $('#order_by').val(d.order_by);
+  $('#end_date').val(d.end_date);
+  $('#start_date').val(d.start_date);
+  $('#reportrange span').html(`${d.start_date} - ${d.end_date}`);
+  $('#order-count').html(d.count);
+};
+</script>
+{% endblock scripts %}

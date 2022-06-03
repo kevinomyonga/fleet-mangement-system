@@ -1,0 +1,5 @@
+
+Hello, {{appointment.name}}!
+Thank you for your interest in our products. Your appointment has been booked successfully on {{appointment.appointment_date | date:'Y-m-d H:i'}}. Andrew is waiting to talk to you.
+
+For more details and clarifications you can write to our CEO via amiller@getboda.co.ke.

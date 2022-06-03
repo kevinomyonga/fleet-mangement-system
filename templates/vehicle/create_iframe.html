@@ -1,0 +1,281 @@
+{% extends "base_iframe.html" %}{% load static %}
+{% block title %} Drivers {% endblock %}
+{% block styles %} 
+<link rel="stylesheet" href="{% static "theme/css/jquery.datetimepicker.min.css" %}">
+<link rel="stylesheet" href="{% static "theme/css/form.css" %}">
+<link rel="stylesheet" href="{% static "theme/tel/css/intlTelInput.min.css" %}">
+{% endblock %}
+
+{% block content %}
+<div>			
+
+	<!-- Row -->
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+
+
+				<div class="content with-padding padding-bottom-10">
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+            <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                <h2 id="heading">Create a vehicle profile</h2>
+                <p>Fill out the form below to create a new vehicle profile</p>
+                <form id="msform" action="" method="post">
+    				{% csrf_token %}
+                    <fieldset>
+                        <div class="form-card">
+							<div class="row">
+								<div class="col-xl-12" id="step1-errors">
+								</div>
+							</div>
+
+
+
+							<div class="submit-field">
+
+								<div class="row">
+
+									<div class="col-xl-6">
+										<h6>Name</h6>
+										<div class="submit-field">
+											<input type="text" class="with-border" id="name" name="name">
+										</div>
+									</div>
+
+									<div class="col-xl-6">
+										<h6>Registration no.</h6>
+										<div class="submit-field">
+											<input type="text" class="with-border" id="reg_no" name="reg_no">
+										</div>
+									</div>
+
+								</div>
+
+								<div class="row">
+									<div class="col-xl-12">
+										<h6>Primary address <span>(this will be the default starting and ending point for the vehicles route)</span></h6>
+										<div class="input-with-icon">
+											<div id="autocomplete-container">
+												<input class="with-border" id="primary_address" name="primary_address" type="text" autocompete="off">
+												<input type="hidden" id="primary_address_lat" name="primary_address_lat">
+												<input type="hidden" id="primary_address_lng" name="primary_address_lng">
+											</div>
+											<i class="icon-material-outline-location-on"></i>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+
+									<div class="col-xl-6">
+										<div class="submit-field">
+											<h6>Service time start <span>(this is the time the vehicle begins work)</span></h6>
+											<div class="btn-group bootstrap-select with-border">
+												<select id="payment_method" class="selectpicker with-border" title="Time" name="hours_start">
+												{% for val, item in hours %}
+													<option value="{{ val }}" {% if val == 8 %}selected{% endif %}>{{ item }}</option>
+												{% endfor %}
+												</select>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-xl-6">
+										<div class="submit-field">
+											<h6>Service time end <span>(this is the time the vehicle finishes work)</span></h6>
+											<div class="btn-group bootstrap-select with-border">
+												<select id="payment_method" class="selectpicker with-border" title="Time" name="hours_end">
+												{% for val, item in hours %}
+													<option value="{{ val }}" {% if val == 17 %}selected{% endif %}>{{ item }}</option>
+												{% endfor %}
+												</select>
+											</div>
+										</div>
+									</div>
+
+								</div>
+
+
+								<br>
+								<div class="row">
+
+									<div class="col-xl-3">
+										<div class="submit-field">
+											<h6>Max length</h6>
+											<div class="input-with-icon">
+												<input class="with-border" id="length" type="number" min="1" name="length">
+												<i class="currency">cms</i>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-xl-3">
+										<div class="submit-field">
+											<h6>Max width</h6>
+											<div class="input-with-icon">
+												<input class="with-border" id="width" type="number" min=1 name="width">
+												<i class="currency">cms</i>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-xl-3">
+										<div class="submit-field">
+											<h6>Max height</h6>
+											<div class="input-with-icon">
+												<input class="with-border" id="height" type="number" min=1 name="height">
+												<i class="currency">cms</i>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-xl-3">
+										<div class="submit-field">
+											<h6>Max load capacity</h6>
+											<div class="input-with-icon">
+												<input class="with-border" id="weight" type="number" min=1 name="weight">
+												<i class="currency">kgs</i>
+											</div>
+										</div>
+									</div>
+
+								</div>
+
+                        </div> <input type="button" id="form-submit" name="next" class="next action-button" value="Submit"/>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- Row / End -->
+
+</div>
+{% endblock content %}
+{% block scripts %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={% if map_api %}{{map_api}}{% else %}AIzaSyDrEYEy6nXlouW4TCD_r3sGs44MwHAS3z4{% endif %}&callback=initMap&libraries=places&v=weekly" defer></script>
+<script>
+  function initMap() {
+    var autocompleteOptions = {
+        componentRestrictions: {
+            'country': ['ke']
+        }
+    };
+    const input_primary_address = document.getElementById("primary_address");
+    const autocomplete= new google.maps.places.Autocomplete(input_primary_address, autocompleteOptions);
+    autocomplete.setFields(['name', 'geometry']);
+
+	google.maps.event.addListener(autocomplete, 'place_changed', function() {
+		var place = autocomplete.getPlace();
+		var location = place.geometry.location;
+		var lat = "",lng = "";
+		$('#primary_address_lat').val(place.geometry.location.lat());
+		$('#primary_address_lng').val(place.geometry.location.lng());
+		
+	});
+
+  }
+  $(document).ready(function() {
+     $("#form-submit").click(function(event) {
+        event.preventDefault();
+
+		var inp = $('#name').val();
+		if(inp == undefined || $.trim(inp).length < 1){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Invalid vehicle name
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step1-errors').html(error);
+			return;
+		}
+		var inp = $('#reg_no').val();
+		if(inp == undefined || $.trim(inp).length < 1){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Invalid vehicle registration number
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step1-errors').html(error);
+			return;
+		}
+
+		var inp = $('#primary_address').val();
+		if(inp == undefined || $.trim(inp).length < 1){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Invalid primary address
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step1-errors').html(error);
+			return;
+		}
+
+		var inp = $('#length').val();
+		if(inp == undefined || $.trim(inp).length < 1){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Invalid length
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step1-errors').html(error);
+			return;
+		}
+
+		var inp = $('#width').val();
+		if(inp == undefined || $.trim(inp).length < 1){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Invalid width
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step1-errors').html(error);
+			return;
+		}
+
+		var inp = $('#height').val();
+		if(inp == undefined || $.trim(inp).length < 1){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Invalid height
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step1-errors').html(error);
+			return;
+		}
+
+		var inp = $('#weight').val();
+		if(inp == undefined || $.trim(inp).length < 1){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Invalid weight
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step1-errors').html(error);
+			return;
+		}
+
+		$('#msform').submit();
+     });
+  });
+</script>
+{% endblock scripts %}

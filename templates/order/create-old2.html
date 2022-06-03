@@ -1,0 +1,534 @@
+{% extends "base.html" %}{% load static %}
+{% block title %} Create an order {% endblock %}
+{% block styles %} 
+<link rel="stylesheet" href="{% static "theme/css/jquery.datetimepicker.min.css" %}">
+<link rel="stylesheet" href="{% static "theme/css/form.css" %}">
+{% endblock %}
+
+{% block content %}
+<div>			
+
+	<!-- Row -->
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+
+
+				<div class="content with-padding padding-bottom-10">
+
+					<div class="row">
+						<div class="col-xl-12">
+						{% for field in form %}
+						  {% if field.errors %}
+							{% for error in field.errors %}
+							<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							  {{ error }}
+							  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+							{% endfor %}
+						  {% endif %}
+						{% endfor %}	
+						</div>
+					</div>
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+            <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                <h2 id="heading">Create an order</h2>
+                <p>Fill out the form below to go to next step</p>
+                <form id="msform">
+                    <!-- progressbar -->
+                    <ul id="progressbar">
+                        <li class="active" id="pickup-details"><strong>Pickup</strong></li>
+                        <li id="dropoff-details"><strong>Dropoff</strong></li>
+                        <li id="order-details"><strong>Details</strong></li>
+                    </ul>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div> <br> <!-- fieldsets -->
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-xl-7">
+                                    <h2 class="fs-title">Pickup contact details</h2>
+                                </div>
+                                <div class="col-xl-5">
+                                    <h2 class="steps">Step 1 - 3</h2>
+                                </div>
+                            </div> 
+
+							<div class="row">
+								<div class="col-xl-12" id="step1-errors">
+								</div>
+							</div>
+
+
+
+							<div class="submit-field">
+								<div class="row">
+									<div class="col-xl-7">
+										<h6>Address</h6>
+										<div class="input-with-icon">
+											<div id="autocomplete-container">
+												<input id="pickup-location" class="with-border" id="pickup_address" type="text" autocompete="off">
+											</div>
+											<i class="icon-material-outline-location-on"></i>
+										</div>
+									</div>
+									<div class="col-xl-5">
+										<h6>Road/Apartment/Hse. No <span>(optional)</span></h6>
+										<div class="submit-field">
+											<input type="text" class="with-border" id="pickup_more">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xl-4">
+										<h6>Name</h6>
+										<div class="submit-field">
+											<input type="text" class="with-border" id="pickup_name">
+										</div>
+									</div>
+									<div class="col-xl-4">
+										<h6>Phone number</h6>
+										<div class="submit-field">
+											<input type="number" class="with-border" id="pickup_phone_number">
+										</div>
+									</div>
+									<div class="col-xl-4">
+										<h6>Email <span>(optional)</span></h6>
+										<div class="submit-field">
+											<input type="email" class="with-border" id="pickup_email">
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+
+                        </div> <input type="button" name="next" class="next action-button" value="Next" data-step="1"/>
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-xl-7">
+                                    <h2 class="fs-title">Drop-off details</h2>
+                                </div>
+                                <div class="col-xl-5">
+                                    <h2 class="steps">Step 2 - 3</h2>
+                                </div>
+                            </div> 
+
+							<div class="row">
+								<div class="col-xl-12" id="step2-errors">
+								</div>
+							</div>
+
+
+							<div class="submit-field">
+								<div class="row">
+									<div class="col-xl-7">
+										<h6>Address</h6>
+										<div class="input-with-icon">
+											<div id="autocomplete-container">
+												<input id="dropoff-location" class="with-border" type="text" id="dropoff_address" autocompete="off">
+											</div>
+											<i class="icon-material-outline-location-on"></i>
+										</div>
+									</div>
+									<div class="col-xl-5">
+										<h6>Road/Apartment/Hse. No  <span>(optional)</span></h6>
+										<div class="submit-field">
+											<input type="text" class="with-border" id="dropoff_more">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xl-4">
+										<h6>Name</h6>
+										<div class="submit-field">
+											<input type="text" class="with-border" id="dropoff_name" >
+										</div>
+									</div>
+									<div class="col-xl-4">
+										<h6>Phone number</h6>
+										<div class="submit-field">
+											<input type="number" class="with-border" id="dropoff_phone_number" >
+										</div>
+									</div>
+									<div class="col-xl-4">
+										<h6>Email  <span>(optional)</span></h6>
+										<div class="submit-field">
+											<input type="email" class="with-border" id="dropoff_email">
+										</div>
+									</div>
+								</div>
+							</div>
+                        </div> <input type="button" name="next" class="next action-button" value="Next"  data-step="2"/> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-xl-7">
+                                    <h2 class="fs-title">Order details</h2>
+                                </div>
+                                <div class="col-xl-5">
+                                    <h2 class="steps">Step 3 - 3</h2>
+                                </div>
+                            </div> 
+
+							<div class="row">
+								<div class="col-xl-12">
+									<div class="submit-field">
+										<div class="row">
+											<div class="col-xl-7">
+												<div class="submit-field">
+													<h6>Ref: <span>(optional)</span></h6>
+													<input type="text"  id="order_ref" class="with-border">
+												</div>
+											</div>
+
+											<div class="col-xl-5">
+												<div class="submit-field">
+													<h6>Preferred delivery date & time  <span>(optional)</span></i></h6>
+													<div class="input-with-icon">
+														<div id="autocomplete-container">
+															<input class="with-border" type="text" autocomplete="off" readonly id="delivery_date">
+														</div>
+														<i class="icon-material-outline-date-range"></i>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-xl-12">
+									<div class="row">
+
+										<div class="col-xl-3">
+											<div class="submit-field">
+												<h6>Length <span>(optional)</span></h6>
+												<div class="input-with-icon">
+													<input class="with-border" id="length" type="number" min=1>
+													<i class="currency">cms</i>
+												</div>
+											</div>
+										</div>
+										<div class="col-xl-3">
+											<div class="submit-field">
+												<h6>Width <span>(optional)</span></h6>
+												<div class="input-with-icon">
+													<input class="with-border" id="width" type="number" min=1>
+													<i class="currency">cms</i>
+												</div>
+											</div>
+										</div>
+										<div class="col-xl-3">
+											<div class="submit-field">
+												<h6>Height <span>(optional)</span></h6>
+												<div class="input-with-icon">
+													<input class="with-border" id="height" type="number" min=1>
+													<i class="currency">cms</i>
+												</div>
+											</div>
+										</div>
+										<div class="col-xl-3">
+											<div class="submit-field">
+												<h6>Weight <span>(optional)</span></h6>
+												<div class="input-with-icon">
+													<input class="with-border" id="weight" type="number" min=1>
+													<i class="currency">kgs</i>
+												</div>
+											</div>
+										</div>
+
+
+									</div>
+								</div>
+
+								<div class="col-xl-12">
+									<div class="row">
+
+										<div class="col-xl-4">
+											<div class="submit-field">
+												<h6>Price <span>(optional)</span></h6>
+												<div class="input-with-icon">
+													<input class="with-border" id="price" type="number" min=1>
+													<i class="currency">ksh</i>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-xl-8">
+											<div class="submit-field">
+												<h6>Payment method</h6>
+												<div class="btn-group bootstrap-select with-border">
+													<select id="payment_method" class="selectpicker with-border" data-size="7" title="Payment method" tabindex="-98"><option class="bs-title-option" value="">Select a payment method</option>
+														<option value="1" selected>Prepaid</option>
+														<option value="2">Postpaid</option>
+														<option value="3">Credit</option>
+													</select>
+												</div>
+											</div>
+										</div>
+
+
+									</div>
+								</div>
+
+							</div>
+
+
+                        </div> <input type="button" name="next" class="next action-button" value="Submit" data-step="3"/> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- Row / End -->
+
+</div>
+<form action="" method="post" style="display:none" id="form-hidden">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+{% endblock content %}
+{% block scripts %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={% if map_api %}{{map_api}}{% else %}AIzaSyDrEYEy6nXlouW4TCD_r3sGs44MwHAS3z4{% endif %}&callback=initMap&libraries=places&v=weekly" defer></script>
+<script src="{% static "theme/js/jquery.datetimepicker.full.min.js" %}"></script>
+
+<script>
+
+  // This example requires the Places library. Include the libraries=places
+  // parameter when you first load the API. For example:
+  // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+  function initMap() {
+    var autocompleteOptions = {
+        componentRestrictions: {
+            'country': ['ke']
+        }
+    };
+    const input_pickup = document.getElementById("pickup-location");
+    const input_dropoff = document.getElementById("dropoff-location");
+    const autocomplete_pickup = new google.maps.places.Autocomplete(input_pickup, autocompleteOptions);
+    const autocomplete_dropoff = new google.maps.places.Autocomplete(input_dropoff, autocompleteOptions);
+    // Set the data fields to return when the user selects a place.
+    autocomplete_pickup.setFields(['name', 'geometry']);
+    autocomplete_dropoff.setFields(['name', 'geometry']);
+
+	google.maps.event.addListener(autocomplete_pickup, 'place_changed', function() {
+		var place = autocomplete_pickup.getPlace();
+		var location = place.geometry.location;
+		var lat = "",lng = "";
+		$('#id_pickup_lat').val(place.geometry.location.lat());
+		$('#id_pickup_lng').val(place.geometry.location.lng());
+		
+	});
+	google.maps.event.addListener(autocomplete_dropoff, 'place_changed', function() {
+		var place = autocomplete_dropoff.getPlace();
+		var lat = "",lng = "";
+		$('#id_dropoff_lat').val(place.geometry.location.lat());
+		$('#id_dropoff_lng').val(place.geometry.location.lng());
+	});
+
+  }
+  $(function () {
+	$("#delivery_date").datetimepicker({
+	  minDate:0,
+	  minTime:new Date(),
+	  format: 'm/d/Y h:m',
+	});
+  });
+
+$(document).ready(function(){
+
+var current_fs, next_fs, previous_fs; //fieldsets
+var opacity;
+var current = 1;
+var steps = $("fieldset").length;
+
+setProgressBar(current);
+
+$(".next").click(function(event){
+var step = $(this).data('step');
+console.log(step);
+if(parseInt(step) == 1){
+	var inp = $('#pickup-location').val();
+	if(inp == undefined || $.trim(inp).length < 1){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Invalid pickup address
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step1-errors').html(error);
+		return;
+	}
+	$('#id_pickup_address').val($.trim(inp));
+
+	var inp = $('#pickup_name').val();
+	if(inp == undefined || $.trim(inp).length < 1){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Invalid pickup contact name
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step1-errors').html(error);
+		return;
+	}
+	$('#id_pickup_name').val($.trim(inp));
+
+	var inp = $('#pickup_phone_number').val();
+	if(inp == undefined || $.trim(inp).length < 6){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Invalid pickup contact phone number
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step1-errors').html(error);
+		return;
+	}
+	$('#id_pickup_phone_number').val($.trim(inp));
+
+	$('#id_pickup_email').val($('#pickup_email').val());
+	$('#id_pickup_address_more').val($('#pickup_more').val());
+}
+
+if(parseInt(step) == 2){
+	var inp = $('#dropoff-location').val();
+	if(inp == undefined || $.trim(inp).length < 1){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Invalid dropoff address
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step2-errors').html(error);
+		return;
+	}
+	$('#id_dropoff_address').val($.trim(inp));
+
+	var inp = $('#dropoff_name').val();
+	if(inp == undefined || $.trim(inp).length < 1){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Invalid dropoff contact name
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step2-errors').html(error);
+		return;
+	}
+	$('#id_dropoff_name').val($.trim(inp));
+
+	var inp = $('#dropoff_phone_number').val();
+	if(inp == undefined || $.trim(inp).length < 6){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Invalid dropoff contact phone number
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step2-errors').html(error);
+		return;
+	}
+	$('#id_dropoff_phone_number').val($.trim(inp));
+
+	$('#id_dropoff_email').val($('#pickup_email').val());
+	$('#id_dropoff_address_more').val($('#pickup_more').val());
+}
+
+if(parseInt(step) == 3){
+	$('#id_ref').val($('#order_ref').val());
+	$('#id_preffered_delivery_date').val($('#delivery_date').val());
+	$('#id_length').val($('#length').val());
+	$('#id_width').val($('#width').val());
+	$('#id_height').val($('#height').val());
+	$('#id_price').val($('#price').val());
+	$('#id_weight').val($('#weight').val());
+	$('#id_payment_method').val($('#payment_method').val());
+	$('#form-hidden').submit();
+}
+current_fs = $(this).parent();
+next_fs = $(this).parent().next();
+
+//Add Class Active
+$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+//show the next fieldset
+next_fs.show();
+//hide the current fieldset with style
+current_fs.animate({opacity: 0}, {
+step: function(now) {
+// for making fielset appear animation
+opacity = 1 - now;
+
+current_fs.css({
+'display': 'none',
+'position': 'relative'
+});
+next_fs.css({'opacity': opacity});
+},
+duration: 500
+});
+setProgressBar(++current);
+});
+
+$(".previous").click(function(){
+
+current_fs = $(this).parent();
+previous_fs = $(this).parent().prev();
+
+//Remove class active
+$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+//show the previous fieldset
+previous_fs.show();
+
+//hide the current fieldset with style
+current_fs.animate({opacity: 0}, {
+step: function(now) {
+// for making fielset appear animation
+opacity = 1 - now;
+
+current_fs.css({
+'display': 'none',
+'position': 'relative'
+});
+previous_fs.css({'opacity': opacity});
+},
+duration: 500
+});
+setProgressBar(--current);
+});
+
+function setProgressBar(curStep){
+	var percent = parseFloat(100 / steps) * curStep;
+	percent = percent.toFixed();
+	$(".progress-bar")
+	.css("width",percent+"%")
+}
+
+$(".submit").click(function(){
+	return false;
+})
+
+});
+</script>
+{% endblock scripts %}

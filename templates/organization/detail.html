@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% block title %} Dashboard {% endblock %}
+{% block content %}
+<form action="" method="post">
+<div>
+
+	<!-- Dashboard Headline -->
+	<div class="dashboard-headline">
+		<h3>Hi, {{ request.user.first_name }}!</h3>
+	</div>
+
+
+	<!-- Row -->
+	<div class="row">
+
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+
+				<!-- Headline -->
+				<div class="headline">
+					<h3><i class="icon-material-outline-business"></i> {{ object.name }} - {{ object.country }}</h3>
+				</div>
+
+				<div class="content with-padding padding-bottom-20">
+
+					<div class="row">
+
+						<div class="col">
+							<div class="row">
+
+								<div class="col-xl-6">
+									<h5>Details</h5>
+									<span>{{ object.owner.email }}</span>
+								</div>
+
+								<div class="col-xl-6">
+									<h5>Created</h5>
+									<span>{{ object.created|date:'d M, Y H:i' }}</span>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-20">
+
+				<!-- Headline -->
+				<div class="headline">
+					<h3><i class="icon-feather-users"></i> Members</h3>
+					<div class="buttons-to-right"><a class="dashboard-status-button blue" href="{% url 'organization:add-user' %}">Add member</a></div>
+				</div>
+
+				<div class="content with-padding padding-bottom-20">
+
+					<div class="row">
+
+						<div class="col">
+							<div class="row">
+						{% for member in object.members %}
+
+								<div class="col-xl-12">
+
+									<div class="job-listing">
+										<!-- Job Listing Details -->
+										<div class="job-listing-details">
+
+											<!-- Details -->
+											<div class="job-listing-description">
+												<h3 class="job-listing-title">{{ member.user.first_name }} {{member.user.last_name }} {% if member.user == object.owner %} <span class="capitalize dashboard-status-button green">owner</span>{% else %} <span class="capitalize dashboard-status-button yellow">member</span> 			&nbsp;&nbsp;<a href="{% url 'organization:remove-user' member.pk %}" rel="superbox[iframe]" class="remove">Remove</a>{% endif %} </h3>
+
+												<!-- Job Listing Footer -->
+												<div class="job-listing-footer">
+													<ul>
+														<li><i class="icon-material-outline-email"></i> {{ member.user.email }}</li>
+														<li><i class="icon-material-outline-access-time"></i> Member since {{ member.created|date:'d M, Y H:i' }}</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+
+									</div>
+
+								</div>
+						{% endfor %}
+
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-20">
+
+				<!-- Headline -->
+				<div class="headline">
+					<h3><i class="icon-line-awesome-money"></i> Mpesa details</h3>
+					<div class="buttons-to-right"><a class="dashboard-status-button blue" href="{% url 'organization:add-m-details' %}">Add mpesa details</a></div>
+				</div>
+
+				<div class="content with-padding padding-bottom-20">
+
+					<div class="row container-fluid">
+
+						<div class="col">
+							<div class="row">
+								<div class="col-xl-6">
+									<h5>Business shortcode:</h5>
+									<span>{{ object.mpesa_details.business_short_code }}</span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xl-6">
+									<h5>Consumer key:</h5>
+									<span>{{ object.mpesa_details.consumer_key }}</span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xl-6">
+									<h5>Consumer Secret:</h5>
+									<span>{{ object.mpesa_details.consumer_secret }}</span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xl-12">
+									<h5>Pass key:</h5>
+									<span>{{ object.mpesa_details.pass_key }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-20">
+
+				<!-- Headline -->
+				<div class="headline">
+					<h3><i class="icon-material-outline-textsms"></i> SMS Settings</h3>
+					<div class="buttons-to-right"><a class="dashboard-status-button blue" href="{% url 'organization:add_sms_gateway' %}">Add sms gateway</a></div>
+				</div>
+
+				<div class="content with-padding padding-bottom-20">
+
+					<div class="row">
+
+						<div class="col">
+							<div class="row">
+
+								<div class="col-xl-12">
+									<div class="checkbox">
+										<input type="checkbox" name="order_recieved" {% if object.send_order_received_sms %}checked{% endif %} id="order_recieved" >
+										<label for="order_recieved"><span class="checkbox-icon"></span> Send SMS when and order is uploaded</label>
+									</div>
+								</div>
+
+								<div class="col-xl-12">
+									<div class="checkbox">
+										<input type="checkbox" name="driver_assigned" {% if object.send_driver_assign_sms %}checked{% endif %} id="driver_assigned" >
+										<label for="driver_assigned"><span class="checkbox-icon"></span> Send SMS when a driver is assgined</label>
+									</div>
+								</div>
+
+								<div class="col-xl-12">
+									<div class="checkbox">
+										<input type="checkbox" name="driver_reassigned" {% if object.send_driver_reassign_sms %}checked{% endif %} id="driver_reassigned" >
+										<label for="driver_reassigned"><span class="checkbox-icon"></span> Send SMS when a driver is reassigned</label>
+									</div>
+								</div>
+
+
+								<div class="col-xl-12">
+									<div class="checkbox">
+										<input type="checkbox" name="driver_started" {% if object.send_driver_start_sms %}checked{% endif %} id="driver_started">
+										<label for="driver_started"><span class="checkbox-icon"></span> Send SMS when a driver starts delivery</label>
+									</div>
+								</div>
+
+								<div class="col-xl-12">
+									<div class="checkbox">
+										<input type="checkbox" name="order_completed" {% if object.send_driver_complete_sms %}checked{% endif %} id="order_completed">
+										<label for="order_completed"><span class="checkbox-icon"></span> Send SMS when an order is completed *(if unchecked, your customers will not be able to leave a review)</label>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-20">
+
+				<!-- Headline -->
+				<div class="headline">
+					<h3><i class="icon-material-outline-assignment"></i>Order Assigning</h3>
+				</div>
+
+				<div class="content with-padding padding-bottom-20">
+
+					<div class="row">
+
+						<div class="col">
+							<div class="row">
+
+								<div class="col-xl-12">
+									<div class="checkbox">
+										<input type="checkbox" name="allow_driver_to_self_assign_orders" {% if object.allow_driver_to_self_assign_orders %}checked{% endif %} id="id_allow_driver_to_self_assign_orders" >
+										<label for="id_allow_driver_to_self_assign_orders"><span class="checkbox-icon"></span> Allow drivers to self assign orders</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-20">
+
+				<!-- Headline -->
+				<div class="headline">
+					<h3><i class="icon-material-outline-settings-input-component"></i> Callback URL</h3>
+				</div>
+
+				<div class="content with-padding padding-bottom-20">
+
+					<div class="row">
+
+						<div class="col">
+							<div class="row">
+
+								<div class="col-xl-12">
+									<input type="text" class="input-text with-border" name="callback_url" id="callback_url" placeholder="Enter your callback URL" value="{% if object.callback_url %}{{  object.callback_url }}{% endif %}">
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-20">
+
+				<!-- Headline -->
+				<div class="headline">
+					<h3><i class="icon-material-outline-map"></i> Google maps api key</h3>
+				</div>
+
+				<div class="content with-padding padding-bottom-20">
+
+					<div class="row">
+
+						<div class="col">
+							<div class="row">
+
+								<div class="col-xl-12">
+									<input type="text" class="input-text with-border" name="googlemap_api_key" id="googlemap_api_key" placeholder="Enter Google map api key" value="{% if object.googlemap_api_key %}{{  object.googlemap_api_key }}{% endif %}">
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Button -->
+		<div class="col-xl-12">
+			<button type="submit" class="button ripple-effect big margin-top-30">Save Changes</button>
+		</div>
+
+	</div>
+	<!-- Row / End -->
+</div>
+{% csrf_token %}
+</form>
+{% endblock content %}

@@ -1,0 +1,172 @@
+{% extends "base.html" %}{% load static %}
+{% block title %} Add a user {% endblock %}
+{% block styles %} 
+<link rel="stylesheet" href="{% static "theme/css/jquery.datetimepicker.min.css" %}">
+<link rel="stylesheet" href="{% static "theme/css/form.css" %}">
+{% endblock %}
+
+{% block content %}
+<div>			
+
+	<!-- Row -->
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <div class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+                            <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                                <h2 id="heading">Add mpesa details</h2>
+                                <p>Fill out the form below to add m-pesa</p>
+
+                                <form action="{% url 'organization:add-m-details'%}" method="post" id="msform">
+                                    {% csrf_token %}
+                                    {{ form.non_field_errors }}
+                                    {{ form.organization.errors }}
+									{{ form.organization }}
+                                    <fieldset>
+                                        <div class="form-card">
+                                            <div class="submit-field">
+                                                <div class="row">
+                                                    <div class="col-xl-12" id = "implementation">
+                                                        {{form.implementation.errors}}
+                                                        {{ form.implementation.label_tag }}
+                                                        {{form.implementation}}
+                                                    </div>
+                                                    <div class="col-xl-12" id = "business_short_code">
+                                                        {{form.business_short_code.errors}}
+                                                        {{ form.business_short_code.label_tag }}
+                                                        {{form.business_short_code}}
+                                                    </div>
+                                                    <div class="col-xl-12" id = "consumer_key">
+                                                        {{form.consumer_key.errors}}
+                                                        {{ form.consumer_key.label_tag }}
+                                                        {{form.consumer_key}}
+                                                    </div>
+                                                    <div class="col-xl-12" id = "consumer_secret">
+                                                        {{form.consumer_secret.errors}}
+                                                        {{ form.consumer_secret.label_tag }}
+                                                        {{form.consumer_secret}}
+                                                    </div>
+                                                    <div class="col-xl-12" id = "pass_key">
+                                                        {{form.pass_key.errors}}
+                                                        {{ form.pass_key.label_tag }}
+                                                        {{form.pass_key}}
+                                                    </div>
+                                                    <div class="col-xl-12" id = "client_id">
+                                                        {{form.client_id.errors}}
+                                                        {{ form.client_id.label_tag }}
+                                                        {{form.client_id}}
+                                                    </div>
+                                                    <div class="col-xl-12" id = "client_secret">
+                                                        {{form.client_secret.errors}}
+                                                        {{ form.client_secret.label_tag }}
+                                                        {{form.client_secret}}
+                                                    </div>
+                                                    <div class="col-xl-12" id = "till_number">
+                                                        {{form.till_number.errors}}
+                                                        {{ form.till_number.label_tag }}
+                                                        {{form.till_number}}
+                                                    </div>
+                                                    {% comment %} <div class="col-xl-12" id = "phone_number">
+                                                        {{form.phone_number.errors}}
+                                                        {{ form.phone_number.label_tag }}
+                                                        {{form.phone_number}}
+                                                    </div> {% endcomment %}
+                                                </div>
+                                            </div>
+                                        </div> <input type="submit" id="form-submit" name="next" class="next action-button" value="Submit"/>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+		</div>
+	 </div>
+
+	</div>
+	<!-- Row / End -->
+
+</div>
+{% endblock content %}
+{% block scripts %}
+<script>
+  $(document).ready(function() {
+    let implementation = document.getElementById('implementation')
+    console.log(implementation)
+	let business_short_code = document.getElementById('business_short_code')
+	let senderId = document.getElementById('consumer_key')
+	let consumer_key = document.getElementById('consumer_secret')
+	let pass_key = document.getElementById('pass_key')
+	let client_id = document.getElementById('client_id')
+	let client_secret = document.getElementById('client_secret')
+	let till_number = document.getElementById('till_number')
+
+	implementation.style.display = "block"
+	business_short_code.style.display = "block"
+	senderId.style.display = "block"
+	consumer_key.style.display = "block"
+	pass_key.style.display = "block"
+	client_id.style.display = "none"
+    client_secret.style.display = "none"
+	till_number.style.display = "none"
+	{% comment %} phone_number.style.display = "block" {% endcomment %}
+	$("#id_implementation").val("1").change();
+
+    document.getElementById('id_implementation').onchange = function() {
+		switch(this.value){
+			case '1':
+                {% comment %} Daraja {% endcomment %}
+                
+                implementation.style.display = "block"
+                business_short_code.style.display = "block"
+                senderId.style.display = "block"
+                consumer_key.style.display = "block"
+                pass_key.style.display = "block"
+                {% comment %} phone_number.style.display = "block" {% endcomment %}
+
+                client_id.style.display = "none"
+                client_secret.style.display = "none"
+                till_number.style.display = "none"
+                {% comment %} phone_number.style.display = "none" {% endcomment %}
+                break;
+			case '2':
+                {% comment %} kopo kopo {% endcomment %}
+                implementation.style.display = "block"
+                client_id.style.display = "block"
+                client_secret.style.display = "block"
+                till_number.style.display = "block"
+                {% comment %} phone_number.style.display = "block" {% endcomment %}
+
+                business_short_code.style.display = "none"
+                senderId.style.display = "none"
+                consumer_key.style.display = "none"
+                pass_key.style.display = "none"
+				break;
+			default:
+				{% comment %} Daraja {% endcomment %}
+				
+				implementation.style.display = "block"
+                business_short_code.style.display = "block"
+                senderId.style.display = "block"
+                consumer_key.style.display = "block"
+                pass_key.style.display = "block"
+                {% comment %} phone_number.style.display = "block" {% endcomment %}
+
+                client_id.style.display = "none"
+                client_secret.style.display = "none"
+                till_number.style.display = "none"
+                {% comment %} phone_number.style.display = "none" {% endcomment %}
+				break;
+		}
+    
+	}
+  });
+	
+</script>
+{% endblock scripts %}

@@ -1,0 +1,132 @@
+{% extends "base_iframe.html" %}{% load static %}
+{% block title %} Driver orders {% endblock %}
+{% block content %}
+<div>		
+
+	<form method="GET" id="Search">
+	<!-- Row -->
+
+	<div class="row">
+
+		<!-- Dashboard Box -->
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+
+
+
+				<!-- Headline -->
+				{% if object_list.paginator.count > 0 %}
+				<div class="headline">
+					<h3><i class="icon-material-outline-assignment"></i> {{ object_list.paginator.count }} orders</h3>
+				</div>
+				{% endif %}
+				<div class="content">
+		{% if object_list %}
+					<ul class="dashboard-box-list" id="ws-orders">
+
+                {% for object in object_list %}
+						<li id="order-{{ object.pk }}">
+							<!-- Job Listing -->
+							<div class="job-listing">
+
+								<!-- Job Listing Details -->
+								<div class="job-listing-details">
+									<!-- Details -->
+									<div class="job-listing-description">
+										<h3 class="job-listing-title">{{object.pickup_location_name }} &raquo;&raquo;&raquo; {{object.dropoff_location_name }}</h3>
+					
+										{% if object.datetime_started %}
+											<span class="capitalize dashboard-status-button green">Started</span>
+										{% else %}
+
+											<span class="capitalize dashboard-status-button red">Not started</span>
+										{% endif %}
+
+
+										<!-- Job Listing Footer -->
+										<div class="job-listing-footer">
+											<ul>
+												<li><i class="icon-material-outline-business-center"></i> ID: <strong>#{{object.id}}</strong></li>
+												{% if object.ref %}
+												<li><i class="icon-material-outline-business-center"></i> Ref: <strong>{{object.ref}}</strong></li>
+												{% endif %}
+												<li><i class="icon-material-outline-access-time"></i>{{ object.time_ago }}</li>
+											</ul>
+											<ul>
+
+												{% if object.datetime_ordered %}
+													<li><i class="icon-material-outline-date-range"></i> Ordered: {{object.datetime_ordered|date:'d M, Y H:i' }}</li>
+												{% endif %}
+												{% if object.created %}
+													<li><i class="icon-material-outline-date-range"></i> Submited: {{object.created|date:'d M, Y H:i' }}</li>
+												{% endif %}
+
+												{% if object.datetime_assigned %}
+													<li><i class="icon-material-outline-date-range"></i> Driver assigned:  {{object.datetime_assigned|date:'d M, Y H:i' }}</li>
+												{% endif %}
+
+												{% if object.datetime_accepted %}
+													<li><i class="icon-material-outline-date-range"></i> Driver accepted: {{object.datetime_accepted|date:'d M, Y H:i' }}</li>
+												{% endif %}
+												{% if object.datetime_started %}
+													<li><i class="icon-material-outline-date-range"></i> Driver started: {{object.datetime_started|date:'d M, Y H:i' }}</li>
+												{% endif %}
+												{% if object.datetime_arrived %}
+													<li><i class="icon-material-outline-date-range"></i> Driver arrived: {{object.datetime_arrived|date:'d M, Y H:i' }}</li>
+												{% endif %}
+												{% if object.datetime_reviewed %}
+													<li><i class="icon-material-outline-date-range"></i> Customer reviewed: {{object.datetime_reviewed|date:'d M, Y H:i' }}</li>
+												{% endif %}
+
+												{% if object.datetime_failed %}
+													<li><i class="icon-material-outline-date-range"></i> Datetime failed: {{object.datetime_failed|date:'d M, Y H:i' }}</li>
+												{% endif %}
+												{% if object.datetime_completed %}
+													<li><i class="icon-material-outline-date-range"></i> Completed: {{object.datetime_completed|date:'d M, Y H:i' }}</li>
+												{% endif %}
+											</ul>
+
+										</div>
+
+										<div class="buttons-to-right always-visible">
+												<a href="{% url 'driver:orders' %}?driver_id={{ object.rider.pk }}&order_id={{ object.pk }}" class="button gray ripple-effect"><i class="icon-material-outline-info"></i> Cancel this order</a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</li>
+
+                {% endfor %}
+					</ul>
+		{% else %}
+			<div class="row">
+				<div class="col-xl-12">
+					<section id="not-found" class="center margin-top-50 margin-bottom-25">
+						<h2><i class="icon-line-awesome-question-circle"></i></h2>
+						<p>No orders to display</p>
+					</section>
+				</div>
+			</div>
+		{% endif %}
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- Row / End -->
+
+	</form>
+
+</div>
+{% endblock content %}
+{% block scripts %}
+<script type="text/javascript">
+$(function() {
+
+	$('.selected-change, #per_page').on('change', function() {
+	    $(this).closest('form').submit();
+	});
+});
+</script>
+{% endblock scripts %}

@@ -1,0 +1,59 @@
+{% extends "base_iframe.html" %}{% load static %}
+{% block title %} Drivers {% endblock %}
+
+
+{% block content %}
+<div>			
+	<!-- Dashboard Headline -->
+	<div class="welcome-text">
+		<h3>Pickup details</h3>
+	</div>
+	<!-- Row -->
+	<div class="row">
+		<div class="col-xl-12">
+
+			<!--Tabs -->
+			<div class="sign-in-form">
+
+				<ul class="popup-tabs-nav">
+				</ul>
+
+				<div class="popup-tabs-container">
+
+					<!-- Tab -->
+					<div class="popup-tab-content" id="tab2">
+						
+						<div class="job-listing-footer">
+							<ul class="dashboard-box-list">
+								<li><i class="icon-feather-user"></i>&nbsp;&nbsp;
+									{% if object.pickup_contact_name %}
+										<h4 class="capitalize">{{object.pickup_contact_name  | lower }}</h4>
+									{% endif %}
+								</li>
+							</ul>
+							<ul class="dashboard-box-list">
+								<li><i class="icon-feather-phone"></i>&nbsp;&nbsp; 
+									{% if object.pickup_contact_phone_number %}
+										<span class="capitalize"><a href="tel:+{{object.pickup_contact_phone_number}}">+{{object.pickup_contact_phone_number}}</a></span>
+									{% endif %}
+								</li>
+							</ul>
+							<ul class="dashboard-box-list">
+								<li><i class="icon-material-outline-location-on"></i>&nbsp;&nbsp; {{object.pickup_location_name}}</li>
+							</ul>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+
+
+		</div>
+	</div>
+	<!-- Row / End -->
+
+</div>
+{% endblock content %}

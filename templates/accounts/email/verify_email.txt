@@ -1,0 +1,10 @@
+{% extends "base_email.txt" %}
+{% block title %} Hi {{ name }}, {% endblock %}
+
+{% block content %}
+
+Copy/paste the link below onto your browser or click in the link below to verify your email
+
+{{ verify_url }}
+
+{% endblock content %}

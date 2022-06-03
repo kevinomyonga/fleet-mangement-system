@@ -1,0 +1,588 @@
+{% extends "base.html" %}{% load static %}
+{% block title %} Create an order {% endblock %}
+{% block styles %} 
+<link rel="stylesheet" href="{% static "theme/css/jquery.datetimepicker.min.css" %}">
+<link rel="stylesheet" href="{% static "theme/css/form.css" %}">
+<link rel="stylesheet" href="{% static "theme/tel/css/intlTelInput.min.css" %}">
+{% endblock %}
+
+{% block content %}
+<div>			
+
+	<!-- Row -->
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+
+
+				<div class="content with-padding padding-bottom-10">
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+            <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                <h2 id="heading">Create an order</h2>
+                <p>Fill out the form below to go to next step</p>
+
+                <form id="msform" action="" method="post">
+				    {% csrf_token %}
+                    <!-- progressbar -->
+                    <ul id="progressbar">
+                        <li class="active" id="pickup-details"><strong>Pickup</strong></li>
+                        <li id="dropoff-details"><strong>Dropoff</strong></li>
+                        <li id="order-details"><strong>Details</strong></li>
+                    </ul>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div> <br> <!-- fieldsets -->
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-xl-7">
+                                    <h2 class="fs-title">Pickup contact details</h2>
+                                </div>
+                                <div class="col-xl-5">
+                                    <h2 class="steps">Step 1 - 3</h2>
+                                </div>
+                            </div> 
+
+							<div class="row">
+								<div class="col-xl-12" id="step1-errors">
+								</div>
+							</div>
+
+
+
+							<div class="submit-field">
+								<div class="row">
+									<div class="col-xl-12">
+										<h6>Address</h6>
+										<div class="input-with-icon">
+											<div id="autocomplete-container">
+												<input class="with-border" id="pickup_address" name="pickup_address" type="text" autocompete="off" value="{{pickup_address }}">
+												<input type="hidden" id="pickup_lat" name="pickup_lat" value="{{ pickup_lat }}">
+												<input type="hidden" id="pickup_lng" name="pickup_lng" value="{{ pickup_lng }}">
+											</div>
+											<i class="icon-material-outline-location-on"></i>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xl-6">
+										<h6>Road/Apartment/Hse. No <span>(optional)</span></h6>
+										<div class="submit-field">
+											<input type="text" class="with-border" id="pickup_address_more" name="pickup_address_more" value="{{pickup_address_more }}">
+										</div>
+									</div>
+
+									<div class="col-xl-6">
+										<h6>Email <span>(optional)</span></h6>
+										<div class="submit-field">
+											<input type="email" class="with-border" id="pickup_email" name="pickup_contact_email" value="{{pickup_contact_email }}">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xl-7">
+										<h6>Name</h6>
+										<div class="submit-field">
+											<input type="text" class="with-border" id="pickup_name" name="pickup_contact_name" value="{{pickup_contact_name }}">
+										</div>
+									</div>
+
+									<div class="col-xl-5">
+										<h6>Phone number</h6>
+										<div class="submit-field">
+											<input type="tel" class="with-border" id="pickup_phone_number" name="pickup_contact_phone_number" value="{{pickup_contact_phone_number }}">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xl-12">
+										<h6>Pickup notes <span>(optional)</span></h6>
+										<div class="submit-field">
+											<textarea  class="with-border" name="pickup_details" value="{{pickup_details }}"></textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+
+                        </div> <input type="button" name="next" class="next action-button" value="Next" data-step="1"/>
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-xl-7">
+                                    <h2 class="fs-title">Drop-off details</h2>
+                                </div>
+                                <div class="col-xl-5">
+                                    <h2 class="steps">Step 2 - 3</h2>
+                                </div>
+                            </div> 
+
+							<div class="row">
+								<div class="col-xl-12" id="step2-errors">
+								</div>
+							</div>
+
+
+							<div class="submit-field">
+								<div class="row">
+									<div class="col-xl-12">
+										<h6>Address</h6>
+										<div class="input-with-icon">
+											<div id="autocomplete-container">
+												<input class="with-border" type="text" id="dropoff_address" autocompete="off"  name="dropoff_address" value="{{dropoff_address }}">
+												<input type="hidden" id="dropoff_lat" name="dropoff_lat" value="{{dropoff_lat }}">
+												<input type="hidden" id="dropoff_lng" name="dropoff_lng" value="{{dropoff_lng }}">
+											</div>
+											<i class="icon-material-outline-location-on"></i>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xl-6">
+										<h6>Road/Apartment/Hse. No  <span>(optional)</span></h6>
+										<div class="submit-field">
+											<input type="text" class="with-border" id="dropoff_more" name="dropoff_address_more" value="{{dropoff_address_more }}">
+										</div>
+									</div>
+									<div class="col-xl-6">
+										<h6>Email  <span>(optional)</span></h6>
+										<div class="submit-field">
+											<input type="email" class="with-border" id="dropoff_email" name="dropoff_contact_email" value="{{dropoff_contact_email }}">
+										</div>
+									</div>
+
+									<div class="col-xl-7">
+										<h6>Name</h6>
+										<div class="submit-field">
+											<input type="text" class="with-border" id="dropoff_name"  name="dropoff_contact_name" value="{{dropoff_contact_name }}">
+										</div>
+									</div>
+									<div class="col-xl-5">
+										<h6>Phone number</h6>
+										<div class="submit-field">
+											<input type="tel" class="with-border" id="dropoff_phone_number"  name="dropoff_contact_phone_number" value="{{dropoff_contact_phone_number }}">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xl-12">
+										<h6>Drop-off notes <span>(optional)</span></h6>
+										<div class="submit-field">
+											<textarea  class="with-border" name="dropoff_details" value="{{dropoff_details }}"></textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+                        </div> <input type="button" name="next" class="next action-button" value="Next"  data-step="2"/> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-xl-7">
+                                    <h2 class="fs-title">Order details</h2>
+                                </div>
+                                <div class="col-xl-5">
+                                    <h2 class="steps">Step 3 - 3</h2>
+                                </div>
+                            </div> 
+
+							<div class="row">
+								<div class="col-xl-12">
+									<div class="submit-field">
+										<div class="row">
+											<div class="col-xl-12">
+												<div class="submit-field">
+													<h6>Ref: <span>(optional)</span></h6>
+													<input type="text"  id="order_ref" class="with-border" name="order_ref" value="{{order_ref }}">
+												</div>
+											</div>
+
+											<div class="col-xl-6">
+												<div class="submit-field">
+													<h6>Preferred delivery date <span>(optional)</span></i></h6>
+													<div class="input-with-icon">
+														<div id="autocomplete-container">
+															<input class="with-border" type="text" autocomplete="off" readonly id="delivery_date" name="delivery_date"  value="{{ delivery_date }}">
+														</div>
+														<i class="icon-material-outline-date-range"></i>
+													</div>
+												</div>
+											</div>
+											<div class="col-xl-6">
+												<div class="submit-field">
+													<h6>Preferred delivery time <span>(optional)</span></i></h6>
+													<div class="btn-group bootstrap-select with-border">
+														<select id="delivery_time" class="selectpicker with-border" title="Delivery time" name="delivery_time">
+														{% for val, item in delivery_times %}
+															<option value="{{ val }}" {% if delivery_time == 1 %}selected{% endif %}>{{ item }}</option>
+														{% endfor %}
+														</select>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-xl-12">
+									<div class="row">
+
+										<div class="col-xl-6">
+											<div class="submit-field">
+												<h6>Length <span>(optional)</span></h6>
+												<div class="input-with-icon">
+													<input class="with-border" id="length" type="number" min="1" name="length"  value="{{length }}">
+													<i class="currency">cms</i>
+												</div>
+											</div>
+										</div>
+										<div class="col-xl-6">
+											<div class="submit-field">
+												<h6>Width <span>(optional)</span></h6>
+												<div class="input-with-icon">
+													<input class="with-border" id="width" type="number" min=1 name="width" value="{{width }}">
+													<i class="currency">cms</i>
+												</div>
+											</div>
+										</div>
+										<div class="col-xl-6">
+											<div class="submit-field">
+												<h6>Height <span>(optional)</span></h6>
+												<div class="input-with-icon">
+													<input class="with-border" id="height" type="number" min=1 name="height" value="{{height }}">
+													<i class="currency">cms</i>
+												</div>
+											</div>
+										</div>
+										<div class="col-xl-6">
+											<div class="submit-field">
+												<h6>Weight <span>(optional)</span></h6>
+												<div class="input-with-icon">
+													<input class="with-border" id="weight" type="number" min=1 name="weight" value="{{weight }}">
+													<i class="currency">kgs</i>
+												</div>
+											</div>
+										</div>
+
+
+									</div>
+								</div>
+
+								<div class="col-xl-12">
+									<div class="row">
+
+										<div class="col-xl-6">
+											<div class="submit-field">
+												<h6>Price <span>(optional)</span></h6>
+												<div class="input-with-icon">
+													<input class="with-border" id="price" type="number" min=1 name="price" value="{{price }}">
+													<i class="currency">ksh</i>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-xl-6">
+											<div class="submit-field">
+												<h6>Payment method</h6>
+												<div class="btn-group bootstrap-select with-border">
+													<select id="payment_method" class="selectpicker with-border" title="Payment method" name="payment_method">
+													{% for val, item in payment_methods %}
+														<option value="{{ val }}" {% if payment_method == val %}selected{% endif %}>{{ item }}</option>
+													{% endfor %}
+													</select>
+												</div>
+											</div>
+										</div>
+
+
+									</div>
+								</div>
+
+							</div>
+
+
+                        </div> <input type="button" name="next" class="next action-button" value="Submit" data-step="3"/> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- Row / End -->
+
+</div>
+{% endblock content %}
+{% block scripts %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={% if map_api %}{{map_api}}{% else %}AIzaSyDrEYEy6nXlouW4TCD_r3sGs44MwHAS3z4{% endif %}&callback=initMap&libraries=places&v=weekly" defer></script>
+<script src="{% static "theme/js/jquery.datetimepicker.full.min.js" %}"></script>
+<script src="{% static "theme/tel/js/intlTelInput.min.js" %}"></script>
+
+
+<script>
+
+    var pickup_phone_number = document.querySelector("#pickup_phone_number");
+    iti1 = window.intlTelInput(pickup_phone_number, {
+      // allowDropdown: false,
+      // autoHideDialCode: false,
+      // autoPlaceholder: "off",
+      // dropdownContainer: document.body,
+      // excludeCountries: ["us"],
+      // formatOnDisplay: false,
+      geoIpLookup: function(callback) {
+         $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+           var countryCode = (resp && resp.country) ? resp.country : "";
+           callback(countryCode);
+         });
+      },
+      // hiddenInput: "full_number",
+      initialCountry: "auto",
+      // localizedCountries: { 'de': 'Deutschland' },
+      // nationalMode: false,
+      // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
+      // placeholderNumberType: "MOBILE",
+      // preferredCountries: ['cn', 'jp'],
+      // separateDialCode: true,
+      utilsScript: "{% static "theme/tel/js/utils.js" %}",
+    });
+
+    var dropoff_phone_number = document.querySelector("#dropoff_phone_number");
+    iti2 = window.intlTelInput(dropoff_phone_number, {
+      // allowDropdown: false,
+      // autoHideDialCode: false,
+      // autoPlaceholder: "off",
+      // dropdownContainer: document.body,
+      // excludeCountries: ["us"],
+      // formatOnDisplay: false,
+      geoIpLookup: function(callback) {
+         $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+           var countryCode = (resp && resp.country) ? resp.country : "";
+           callback(countryCode);
+         });
+      },
+      // hiddenInput: "full_number",
+      initialCountry: "auto",
+      // localizedCountries: { 'de': 'Deutschland' },
+      // nationalMode: false,
+      // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
+      // placeholderNumberType: "MOBILE",
+      // preferredCountries: ['cn', 'jp'],
+      // separateDialCode: true,
+      utilsScript: "{% static "theme/tel/js/utils.js" %}",
+    });
+
+  // parameter when you first load the API. For example:
+  // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+  function initMap() {
+    var autocompleteOptions = {
+        componentRestrictions: {
+            'country': ['ke']
+        }
+    };
+    const input_pickup = document.getElementById("pickup_address");
+    const input_dropoff = document.getElementById("dropoff_address");
+    const autocomplete_pickup = new google.maps.places.Autocomplete(input_pickup, autocompleteOptions);
+    const autocomplete_dropoff = new google.maps.places.Autocomplete(input_dropoff, autocompleteOptions);
+    // Set the data fields to return when the user selects a place.
+    autocomplete_pickup.setFields(['name', 'geometry']);
+    autocomplete_dropoff.setFields(['name', 'geometry']);
+
+	google.maps.event.addListener(autocomplete_pickup, 'place_changed', function() {
+		var place = autocomplete_pickup.getPlace();
+		var location = place.geometry.location;
+		var lat = "",lng = "";
+		$('#pickup_lat').val(place.geometry.location.lat());
+		$('#pickup_lng').val(place.geometry.location.lng());
+		
+	});
+	google.maps.event.addListener(autocomplete_dropoff, 'place_changed', function() {
+		var place = autocomplete_dropoff.getPlace();
+		var lat = "",lng = "";
+		$('#dropoff_lat').val(place.geometry.location.lat());
+		$('#dropoff_lng').val(place.geometry.location.lng());
+	});
+
+  }
+  $(function () {
+	$("#delivery_date").datetimepicker({
+	  minDate:0,
+	  timepicker:false,
+	  format: 'm/d/Y',
+	});
+  });
+
+$(document).ready(function(){
+
+var current_fs, next_fs, previous_fs; //fieldsets
+var opacity;
+var current = 1;
+var steps = $("fieldset").length;
+
+setProgressBar(current);
+
+$(".next").click(function(event){
+var step = $(this).data('step');
+console.log(step);
+if(parseInt(step) == 1){
+	var inp = $('#pickup_address').val();
+	if(inp == undefined || $.trim(inp).length < 1){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Invalid pickup address
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step1-errors').html(error);
+		return;
+	}
+
+	var inp = $('#pickup_name').val();
+	if(inp == undefined || $.trim(inp).length < 1){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Invalid pickup contact name
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step1-errors').html(error);
+		return;
+	}
+
+	if(!iti1.isValidNumber()){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Invalid pickup contact phone number
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step1-errors').html(error);
+		return;
+	}
+}
+
+if(parseInt(step) == 2){
+	var inp = $('#dropoff_address').val();
+	if(inp == undefined || $.trim(inp).length < 1){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Invalid dropoff address
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step2-errors').html(error);
+		return;
+	}
+
+	var inp = $('#dropoff_name').val();
+	if(inp == undefined || $.trim(inp).length < 1){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Invalid dropoff contact name
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step2-errors').html(error);
+		return;
+	}
+
+	if(!iti2.isValidNumber()){
+		var error = `
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 Invalid dropoff contact phone number
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		`;
+		$('#step2-errors').html(error);
+		return;
+	}
+}
+
+if(parseInt(step) == 3){
+	var pPhoneNumber = iti1.getNumber(intlTelInputUtils.numberFormat.E164);
+	$('#pickup_phone_number').val(pPhoneNumber);
+
+	var dPhoneNumber = iti2.getNumber(intlTelInputUtils.numberFormat.E164);
+	$('#dropoff_phone_number').val(dPhoneNumber);
+	$('#msform').submit();
+}
+current_fs = $(this).parent();
+next_fs = $(this).parent().next();
+
+//Add Class Active
+$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+//show the next fieldset
+next_fs.show();
+//hide the current fieldset with style
+current_fs.animate({opacity: 0}, {
+step: function(now) {
+// for making fielset appear animation
+opacity = 1 - now;
+
+current_fs.css({
+'display': 'none',
+'position': 'relative'
+});
+next_fs.css({'opacity': opacity});
+},
+duration: 500
+});
+setProgressBar(++current);
+});
+
+$(".previous").click(function(){
+
+current_fs = $(this).parent();
+previous_fs = $(this).parent().prev();
+
+//Remove class active
+$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+//show the previous fieldset
+previous_fs.show();
+
+//hide the current fieldset with style
+current_fs.animate({opacity: 0}, {
+step: function(now) {
+// for making fielset appear animation
+opacity = 1 - now;
+
+current_fs.css({
+'display': 'none',
+'position': 'relative'
+});
+previous_fs.css({'opacity': opacity});
+},
+duration: 500
+});
+setProgressBar(--current);
+});
+
+function setProgressBar(curStep){
+	var percent = parseFloat(100 / steps) * curStep;
+	percent = percent.toFixed();
+	$(".progress-bar")
+	.css("width",percent+"%")
+}
+
+$(".submit").click(function(){
+	return false;
+})
+
+});
+</script>
+{% endblock scripts %}

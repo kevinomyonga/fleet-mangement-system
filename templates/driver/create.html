@@ -1,0 +1,145 @@
+{% extends "base.html" %}{% load static %}
+{% block title %} Drivers {% endblock %}
+{% block styles %} 
+<link rel="stylesheet" href="{% static "theme/css/jquery.datetimepicker.min.css" %}">
+<link rel="stylesheet" href="{% static "theme/css/form.css" %}">
+<link rel="stylesheet" href="{% static "theme/tel/css/intlTelInput.min.css" %}">
+{% endblock %}
+
+{% block content %}
+<div>			
+
+	<!-- Row -->
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="dashboard-box margin-top-0">
+
+
+				<div class="content with-padding padding-bottom-10">
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+            <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                <h2 id="heading">Create a driver</h2>
+                <p>Fill out the form below to create a new driver</p>
+                <form id="msform" action="" method="post">
+    				{% csrf_token %}
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-xl-7">
+                                    <h2 class="fs-title">Driver details</h2>
+                                </div>
+                            </div> 
+
+							<div class="row">
+								<div class="col-xl-12" id="step1-errors">
+								</div>
+							</div>
+
+
+
+							<div class="submit-field">
+								<div class="row">
+									<div class="col-xl-12">
+										<h6>Full names</h6>
+										<div class="submit-field">
+											<input type="text" class="with-border" id="name" name="name" value="{{ name }}">
+										</div>
+									</div>
+									<div class="col-xl-5">
+										<h6>Phone number</h6>
+										<div class="submit-field">
+											<input type="tel" class="with-border" id="phone_number" name="phone_number" value="{{ phone_number }}">
+										</div>
+									</div>
+									<div class="col-xl-7">
+										<h6>Vehicle Reg. no</h6>
+										<div class="submit-field">
+											<input type="tel" class="with-border" id="reg_no" name="reg_no" value="{{ reg_no }}">
+										</div>
+									</div>
+								</div>
+							</div>
+
+                        </div> <input type="button" id="form-submit" name="next" class="next action-button" value="Submit"/>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- Row / End -->
+
+</div>
+{% endblock content %}
+{% block scripts %}
+<script src="{% static "theme/tel/js/intlTelInput.min.js" %}"></script>
+<script>
+    var phone_number = document.querySelector("#phone_number");
+    iti = window.intlTelInput(phone_number, {
+      // allowDropdown: false,
+      // autoHideDialCode: false,
+      // autoPlaceholder: "off",
+      // dropdownContainer: document.body,
+      // excludeCountries: ["us"],
+      // formatOnDisplay: false,
+      geoIpLookup: function(callback) {
+         $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+           var countryCode = (resp && resp.country) ? resp.country : "";
+           callback(countryCode);
+         });
+      },
+      // hiddenInput: "full_number",
+      initialCountry: "auto",
+      // localizedCountries: { 'de': 'Deutschland' },
+      // nationalMode: false,
+      // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
+      // placeholderNumberType: "MOBILE",
+      // preferredCountries: ['cn', 'jp'],
+      // separateDialCode: true,
+      utilsScript: "{% static "theme/tel/js/utils.js" %}",
+    });
+  $(document).ready(function() {
+     $("#form-submit").click(function(event) {
+        event.preventDefault();
+
+		if(!iti.isValidNumber()){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Invalid phone number
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step1-errors').html(error);
+			return;
+		}
+
+		var inp = $('#name').val();
+		if(inp == undefined || $.trim(inp).length < 1){
+			var error = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				 Invalid driver name
+				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#step1-errors').html(error);
+			return;
+		}
+
+		var pPhoneNumber = iti.getNumber(intlTelInputUtils.numberFormat.E164);
+		$('#phone_number').val(pPhoneNumber);
+		$('#msform').submit();
+     });
+  });
+</script>
+{% endblock scripts %}
